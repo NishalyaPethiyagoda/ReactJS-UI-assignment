@@ -4,9 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { InputLabel, MenuItem, TextField } from '@mui/material';
-import { Form } from 'react-router-dom';
-
+import {  MenuItem, TextField } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -21,25 +19,30 @@ const style = {
     p: 4,
   };
 
-const designations = [
+const positions = [
     {
-        value: 'Worker',
+        value: '3',
         label: 'Worker',
     },
     {
-        value: 'Captain',
+        value: '2',
         label: 'Captain',
     },
     {
-        value: 'CEO',
+        value: '1',
         label: 'CEO',
     }
 ];
 
+function getWorkerPosition(worker, positions){
+    const positionAvailable = positions.find(position => position.label==worker.designation);
+    return positionAvailable.value;
+}
+
 function UpdateWorker({worker, setOpen } ) {
     
     //const [open, setOpen] = useState(false);
-
+    
     const handleClose = () =>{
         setOpen(false);
     }
@@ -50,7 +53,6 @@ function UpdateWorker({worker, setOpen } ) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-            
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Update Worker
@@ -63,22 +65,24 @@ function UpdateWorker({worker, setOpen } ) {
                     <TextField id="outlined-basic" label="Worker Certified Until (Date)" defaultValue={worker.certifiedDate} sx={{minWidth: 295, marginTop:3}} variant="outlined" />
                         
                     <TextField id="outlined-basic" label="Email" defaultValue={worker.email} sx={{minWidth: 295, marginTop:3}} variant="outlined"  />
-                        
+
                     <TextField 
                         select 
                         id="outlined-select" 
                         label="Designation" 
-                        variant="filled"
-                        defaultValue="Worker"
+                        defaultValue={getWorkerPosition(worker, positions)}
                         sx={{minWidth: 295, marginTop:3}}
                     >
-                        {designations.map( (option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                            { option.label}
+                        {positions.map( (option) => (
+                            <MenuItem 
+                                key={option.value} 
+                                value={option.value}
+                            >
+                                { option.label}
                             </MenuItem>
-                        )
-                        )}
-                    </TextField>
+                            ))
+                        }
+                    {console.log(worker.designation)}</TextField>
                     <Button variant="contained" onClick={null} sx={{margin: 3, minWidth:100}}>Submit</Button>
                         
                     <Button variant="contained" onClick={handleClose} sx={{marginLeft: 4}}>Close</Button>
