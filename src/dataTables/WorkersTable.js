@@ -88,6 +88,7 @@ export default function WorkersTable() {
         </Table>
         <Modal
           open={open}
+          autocomplete="off"
         >
           <UpdateWorker  worker={selectedWorker}  setOpen={setOpen}  />
         </Modal>

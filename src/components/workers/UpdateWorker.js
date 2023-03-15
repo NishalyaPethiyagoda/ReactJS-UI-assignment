@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {  MenuItem, TextField } from '@mui/material';
+import axios from 'axios';
+
 
 const style = {
     position: 'absolute',
@@ -19,29 +21,45 @@ const style = {
     p: 4,
   };
 
-const positions = [
-    {
-        value: '3',
-        label: 'Worker',
-    },
-    {
-        value: '2',
-        label: 'Captain',
-    },
-    {
-        value: '1',
-        label: 'CEO',
-    }
-];
+  
+// const positions = [
+//     {
+//         value: '3',
+//         label: 'Worker',
+//     },
+//     {
+//         value: '2',
+//         label: 'Captain',
+//     },
+//     {
+//         value: '1',
+//         label: 'CEO',
+//     }
+// ];
 
-function getWorkerPosition(worker, positions){
-    const positionAvailable = positions.find(position => position.label==worker.designation);
-    return positionAvailable.value;
-}
+// function getWorkerPosition(worker, positions){
+//     const positionAvailable = positions.find(position => position.name==worker.designation);
+//     return positionAvailable.name;
+// }
 
 function UpdateWorker({worker, setOpen } ) {
     
-    //const [open, setOpen] = useState(false);
+    const [positions, setPositions] = useState([]);
+    const [newWorker, setWorker] = useState();
+  
+    useEffect(()=>{
+        axios.get('http://localhost:12759/api/WorkerDesignation')
+            .then(response => {
+                setPositions(response.data);
+            })
+    }, []);
+
+    function getWorkerPosition(worker, positions){
+        const currentPosition = positions.find(position => position.name == worker.designation);
+        console.log(currentPosition)
+        return currentPosition!= null ? currentPosition : "CEO";
+    }
+    
     
     const handleClose = () =>{
         setOpen(false);
@@ -64,25 +82,32 @@ function UpdateWorker({worker, setOpen } ) {
                         
                     <TextField id="outlined-basic" label="Worker Certified Until (Date)" defaultValue={worker.certifiedDate} sx={{minWidth: 295, marginTop:3}} variant="outlined" />
                         
-                    <TextField id="outlined-basic" label="Email" defaultValue={worker.email} sx={{minWidth: 295, marginTop:3}} variant="outlined"  />
+                    <TextField id="outlined-basic" label="Email" sx={{minWidth: 295, marginTop:3}} variant="outlined"
+                        defaultValue={worker.email}
+                        onChange={(e) => setWorker({...worker, email: e.target.value})}
+                    />
 
                     <TextField 
                         select 
                         id="outlined-select" 
                         label="Designation" 
                         defaultValue={getWorkerPosition(worker, positions)}
+                        //defaultValue={worker.designation}
+                        onChange={(e) => setWorker({...worker, designation: e.target.value})}
+                        
                         sx={{minWidth: 295, marginTop:3}}
                     >
-                        {positions.map( (option) => (
+                        {console.log(newWorker)}
+                        {positions.map( (position) => (
                             <MenuItem 
-                                key={option.value} 
-                                value={option.value}
+                                key={position.id} 
+                                value={position.id}
                             >
-                                { option.label}
+                                { position.name}
                             </MenuItem>
                             ))
                         }
-                    {console.log(worker.designation)}</TextField>
+                    </TextField>
                     <Button variant="contained" onClick={null} sx={{margin: 3, minWidth:100}}>Submit</Button>
                         
                     <Button variant="contained" onClick={handleClose} sx={{marginLeft: 4}}>Close</Button>

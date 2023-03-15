@@ -1,6 +1,7 @@
 
 import './App.css';
 
+
 import Home from './pages/Home';
 import Farms from './pages/Farm';
 import Workers from './pages/Worker';
@@ -35,6 +36,7 @@ function App() {
       </Router>
       
     </div>
+
   );
 }
 
