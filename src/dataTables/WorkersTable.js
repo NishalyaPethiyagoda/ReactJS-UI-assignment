@@ -32,7 +32,7 @@ export default function WorkersTable() {
     setOpen(true);
   };
 
-  console.log(workerList);
+  //console.log(workerList);
   return (
     
     <TableContainer component={Paper}>
