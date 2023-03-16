@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {  MenuItem, TextField } from '@mui/material';
 import axios from 'axios';
-
+import { Grid } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -21,31 +21,12 @@ const style = {
     p: 4,
   };
 
-  
-// const positions = [
-//     {
-//         value: '3',
-//         label: 'Worker',
-//     },
-//     {
-//         value: '2',
-//         label: 'Captain',
-//     },
-//     {
-//         value: '1',
-//         label: 'CEO',
-//     }
-// ];
-
-// function getWorkerPosition(worker, positions){
-//     const positionAvailable = positions.find(position => position.name==worker.designation);
-//     return positionAvailable.name;
-// }
 
 function UpdateWorker({worker, setOpen } ) {
     
     const [positions, setPositions] = useState([]);
-    const [newWorker, setWorker] = useState();
+    const [newWorker, setWorker] = useState(worker);
+    const [updateAlert, setUpdateAlert] = useState("");
   
     useEffect(()=>{
         axios.get('http://localhost:12759/api/WorkerDesignation')
@@ -54,13 +35,17 @@ function UpdateWorker({worker, setOpen } ) {
             })
     }, []);
 
-    function getWorkerPosition(worker, positions){
-        const currentPosition = positions.find(position => position.name == worker.designation);
-        console.log(currentPosition)
-        return currentPosition!= null ? currentPosition : "CEO";
+    const updateWorkerSubmit = (newWorker) => {
+        console.log(newWorker);
+
+        axios.put(`http://localhost:12759/api/Worker/${newWorker.id}`, newWorker)
+            .then( response => setUpdateAlert(response.data))
+
+        console.log(updateAlert);
+        
+        setOpen(false);
     }
-    
-    
+
     const handleClose = () =>{
         setOpen(false);
     }
@@ -76,28 +61,57 @@ function UpdateWorker({worker, setOpen } ) {
                         Update Worker
                     </Typography>
                         
-                    <TextField id="outlined-basic" label="Name" defaultValue={worker.name} sx={{minWidth: 295, marginTop:3}} variant="outlined" size='100px'/>
+                    <TextField 
+                        id="outlined-basic" 
+                        label="Name" 
+                        defaultValue={worker.name} 
+                        onChange={(e) => setWorker({...newWorker, name: e.target.value})}
+                        sx={{minWidth: 295, marginTop:3}} 
+                        variant="outlined" size='100px'/>
                           
-                    <TextField id="outlined-basic" label="Age" defaultValue={worker.age} sx={{minWidth: 295, marginTop:3}} variant="outlined" />
+                    <TextField 
+                        id="outlined-basic" 
+                        label="Age" 
+                        defaultValue={worker.age} 
+                        onChange={(e) => setWorker({...newWorker, age: e.target.value})}
+                        sx={{minWidth: 295, marginTop:3}} 
+                        variant="outlined" />
                         
-                    <TextField id="outlined-basic" label="Worker Certified Until (Date)" defaultValue={worker.certifiedDate} sx={{minWidth: 295, marginTop:3}} variant="outlined" />
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Worker Certified Until (Date)"
+                                sx={{minWidth: 295, marginTop:3}}
+                                variant="outlined"
+                                type="date"
+                                defaultValue={worker.certifiedDate}
+                                onChange={(e) => setWorker({ ...newWorker, certifiedDate: e.target.value })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
                         
-                    <TextField id="outlined-basic" label="Email" sx={{minWidth: 295, marginTop:3}} variant="outlined"
+                    <TextField 
+                        id="outlined-basic" 
+                        label="Email" sx={{minWidth: 295, marginTop:3}} 
+                        variant="outlined"
                         defaultValue={worker.email}
-                        onChange={(e) => setWorker({...worker, email: e.target.value})}
+                        onChange={(e) => setWorker({...newWorker, email: e.target.value})}
                     />
 
                     <TextField 
                         select 
                         id="outlined-select" 
                         label="Designation" 
-                        defaultValue={getWorkerPosition(worker, positions)}
-                        //defaultValue={worker.designation}
-                        onChange={(e) => setWorker({...worker, designation: e.target.value})}
+                        defaultValue={parseInt(worker.designationId)}
+                        onChange={(e) => setWorker({...newWorker, designationId: e.target.value})}
                         
                         sx={{minWidth: 295, marginTop:3}}
                     >
-                        {console.log(newWorker)}
+                        
                         {positions.map( (position) => (
                             <MenuItem 
                                 key={position.id} 
@@ -108,7 +122,14 @@ function UpdateWorker({worker, setOpen } ) {
                             ))
                         }
                     </TextField>
-                    <Button variant="contained" onClick={null} sx={{margin: 3, minWidth:100}}>Submit</Button>
+                    <Button 
+                        variant="contained" 
+                        onClick={() => updateWorkerSubmit(newWorker)} 
+                        sx={{margin: 3, minWidth:100}}
+                    >
+                        Submit
+                    {/* {console.log(worker)} */}
+                    </Button>
                         
                     <Button variant="contained" onClick={handleClose} sx={{marginLeft: 4}}>Close</Button>
                 </Box>

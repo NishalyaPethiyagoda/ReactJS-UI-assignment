@@ -63,7 +63,7 @@ export default function WorkersTable() {
                       {worker.name}  
                     </TableCell>
                     <TableCell align='left'>
-                      {worker.age}  
+                      {worker.age} 
                     </TableCell>
                     <TableCell align='left'>
                       {worker.email}  
@@ -72,10 +72,13 @@ export default function WorkersTable() {
                       {worker.certifiedDate } 
                     </TableCell>
                     <TableCell align='left'>
-                      {worker.designation}  
+                      {worker.designationName}  
                     </TableCell>
                     <TableCell align='left'>
-                      <Button onClick={ () => handleEditClick(worker) } variant="contained" >Edit</Button> 
+                      <Button onClick={ () => handleEditClick(worker) } variant="contained" 
+                      >
+                        {/* {console.log(worker)} */}
+                        Edit</Button> 
                     </TableCell>
                     <TableCell align='left'>
                       <Button variant="contained" >Delete</Button> 
