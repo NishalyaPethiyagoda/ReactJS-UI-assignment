@@ -54,6 +54,7 @@ function AddWorker() {
         .catch(error => {
             console.log(error);
         });
+        // console.log(newWorker);
         handleClose();
     }
 
