@@ -5,19 +5,27 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState, useEffect} from 'react'
 import UpdateWorker from '../components/workers/UpdateWorker';
+import Box from '@mui/material/Box';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 
 export default function WorkersTable() {
 
   const [workerList, setWorkerList] = useState([]);
+
   const [selectedWorker, setSelectedWorker] = useState(null );
-  const [open, setOpen] = useState(false);
+  const [deletingWorker, setDeletingWorker] = useState(null);
+
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+  const [openDeletePopupModal, setDeletePopupModal] = useState(false);
+
+  const [deletedAlert, setDeletedAlert] = useState("");
 
   useEffect(() => {
     axios.get('http://localhost:12759/api/worker')
@@ -29,10 +37,26 @@ export default function WorkersTable() {
 
   const handleEditClick = (worker) => {
     setSelectedWorker(worker);
-    setOpen(true);
+    setOpenUpdateModal(true);
   };
 
-  //console.log(workerList);
+  const handleDeleteClick = (worker) => {
+    setDeletingWorker(worker);
+    setDeletePopupModal(true);
+  }
+
+  const handleDeleteAction = (worker) =>{
+
+    axios.delete(`http://localhost:12759/api/worker/${worker.id}`)
+      .then(response=> {setDeletedAlert(response.data)});
+
+    setDeletePopupModal(false);
+  }
+
+  const handleCloseDeletePopup = () => {
+    setDeletePopupModal(false);
+  }
+
   return (
     
     <TableContainer component={Paper}>
@@ -75,13 +99,19 @@ export default function WorkersTable() {
                       {worker.designationName}  
                     </TableCell>
                     <TableCell align='left'>
-                      <Button onClick={ () => handleEditClick(worker) } variant="contained" 
+                      <Button 
+                        onClick={ () => handleEditClick(worker) } 
+                        variant="contained" 
                       >
-                        {/* {console.log(worker)} */}
-                        Edit</Button> 
+                        Edit
+                      </Button> 
                     </TableCell>
                     <TableCell align='left'>
-                      <Button variant="contained" >Delete</Button> 
+                      <Button 
+                        onClick={
+                          () => handleDeleteClick(worker)
+                        }
+                        variant="contained" >Delete</Button> 
                     </TableCell>
                   </TableRow>
                 );
@@ -90,10 +120,25 @@ export default function WorkersTable() {
           </TableBody>
         </Table>
         <Modal
-          open={open}
+          open={openUpdateModal}
           autocomplete="off"
         >
-          <UpdateWorker  worker={selectedWorker}  setOpen={setOpen}  />
+          <UpdateWorker  worker={selectedWorker}  setOpenUpdateModal={setOpenUpdateModal}  />
+        </Modal>
+
+        <Modal
+          open= {openDeletePopupModal}
+          onClose = {handleCloseDeletePopup}
+        >
+          <ConfirmationPopup 
+            confirmationMessage={"Are you sure to delete this worker?"}
+            confirmButtonMessage= {"Delete"}
+            deletingEntity = {deletingWorker}
+            confirmedAction ={handleDeleteAction}
+            openPopupModal={setDeletePopupModal}
+            closePopupModal = {handleCloseDeletePopup}
+          >
+          </ConfirmationPopup>
         </Modal>
       </TableContainer>
   );

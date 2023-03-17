@@ -22,7 +22,7 @@ const style = {
   };
 
 
-function UpdateWorker({worker, setOpen } ) {
+function UpdateWorker({worker, setOpenUpdateModal } ) {
     
     const [positions, setPositions] = useState([]);
     const [newWorker, setWorker] = useState(worker);
@@ -42,17 +42,18 @@ function UpdateWorker({worker, setOpen } ) {
             .then( response => setUpdateAlert(response.data))
 
         console.log(updateAlert);
-        
-        setOpen(false);
+        setWorker(newWorker);
+        setOpenUpdateModal(false);
+        alert(updateAlert);
     }
 
     const handleClose = () =>{
-        setOpen(false);
+        setOpenUpdateModal(false);
     }
     return (
         <div>
             <Modal
-                open={setOpen}
+                open={setOpenUpdateModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -85,6 +86,7 @@ function UpdateWorker({worker, setOpen } ) {
                                 sx={{minWidth: 295, marginTop:3}}
                                 variant="outlined"
                                 type="date"
+                                //defaultValue={DateTime.parse(worker.certifiedDate)}
                                 defaultValue={worker.certifiedDate}
                                 onChange={(e) => setWorker({ ...newWorker, certifiedDate: e.target.value })}
                                 InputLabelProps={{
