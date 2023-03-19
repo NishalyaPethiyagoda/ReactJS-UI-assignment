@@ -13,8 +13,9 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '25%',
+    width: '20%',
     minWidth: '300px',
+    
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -87,7 +88,7 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                                 variant="outlined"
                                 type="date"
                                 //defaultValue={DateTime.parse(worker.certifiedDate)}
-                                defaultValue={worker.certifiedDate}
+                                defaultValue={Date.parse(worker.certifiedDate)}
                                 onChange={(e) => setWorker({ ...newWorker, certifiedDate: e.target.value })}
                                 InputLabelProps={{
                                     shrink: true,
@@ -133,7 +134,10 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                     {/* {console.log(worker)} */}
                     </Button>
                         
-                    <Button variant="contained" onClick={handleClose} sx={{marginLeft: 4}}>Close</Button>
+                    <Button 
+                        variant="contained" 
+                        onClick={handleClose} 
+                        sx={{marginLeft: 4}}>Close</Button>
                 </Box>
             </Modal>
         </div>

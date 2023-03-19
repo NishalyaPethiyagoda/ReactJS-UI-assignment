@@ -31,9 +31,9 @@ export default function WorkersTable() {
     axios.get('http://localhost:12759/api/worker')
       .then(response => {
         setWorkerList(response.data);
-      })
+      });
       
-  }, []);
+  });
 
   const handleEditClick = (worker) => {
     setSelectedWorker(worker);
@@ -93,7 +93,10 @@ export default function WorkersTable() {
                       {worker.email}  
                     </TableCell>
                     <TableCell align='left'>
-                      {worker.certifiedDate } 
+                      {
+                        // Date(worker.certifiedDate) 
+                        worker.certifiedDate
+                      } 
                     </TableCell>
                     <TableCell align='left'>
                       {worker.designationName}  
