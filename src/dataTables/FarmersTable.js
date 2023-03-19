@@ -8,6 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Button, Modal } from '@mui/material';
+import axios from 'axios';
+import {useState, useEffect} from 'react';
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 function createData( ID, Name, Lattitude, Longitute, NoOfCages, HasBarge) {
   return {  ID, Name, Lattitude, Longitute, NoOfCages, HasBarge };
@@ -34,6 +38,8 @@ export default function BasicTable() {
             <TableCell align="right">Longitute</TableCell>
             <TableCell align="right">No of Cages</TableCell>
             <TableCell align="right">Has Barge?</TableCell>
+            <TableCell align="right"></TableCell>
+            <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -50,6 +56,30 @@ export default function BasicTable() {
               <TableCell align="right">{row.Longitute}</TableCell>
               <TableCell align="right">{row.NoOfCages}</TableCell>
               <TableCell align="right">{row.HasBarge}</TableCell>
+              <TableCell align="right">
+                <Button
+                  variant="contained" 
+                  onClick={null}
+                >
+                  Workers
+                </Button>
+              </TableCell>
+              <TableCell >
+                <Button
+                  variant="contained" 
+                  onClick={null}
+                >
+                  Edit
+                </Button>
+              </TableCell>
+              <TableCell >
+                <Button
+                  variant="contained" 
+                  onClick={null}
+                >
+                  Delete
+                </Button>
+              </TableCell>
 
             </TableRow>
           ))}

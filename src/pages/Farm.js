@@ -4,6 +4,7 @@ import FarmersTable from '../dataTables/FarmersTable'
 
 import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
+import AddFarm from '../components/farmers/AddFarm';
 
 
 function Farms() {
@@ -11,8 +12,11 @@ function Farms() {
         <div>
             <body>
                 <div>
-                <Container sx={{color:"red"}}>
-                    <h1>Farmers Table</h1>
+                <Container>
+                    <h1>Farms</h1>
+                </Container>
+                <Container align="right" >
+                    <AddFarm></AddFarm>
                 </Container>
                 <Box sx={{margin: '34px'}}>
                     <FarmersTable></FarmersTable>
