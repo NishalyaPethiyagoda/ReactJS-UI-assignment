@@ -25,7 +25,7 @@ export default function WorkersTable() {
 
   const [openDeletePopupModal, setDeletePopupModal] = useState(false);
 
-  const [deletedAlert, setDeletedAlert] = useState("");
+  //const [deletedAlert, setDeletedAlert] = useState("");
 
   useEffect(() => {
     axios.get('http://localhost:12759/api/worker')
@@ -48,7 +48,7 @@ export default function WorkersTable() {
   const handleDeleteAction = (worker) =>{
 
     axios.delete(`http://localhost:12759/api/worker/${worker.id}`)
-      .then(response=> {setDeletedAlert(response.data)});
+    //  .then(response=> {setDeletedAlert(response.data)});
 
     setDeletePopupModal(false);
   }
@@ -90,7 +90,9 @@ export default function WorkersTable() {
                       {worker.age} 
                     </TableCell>
                     <TableCell align='left'>
-                      {worker.email}  
+                      { //console.log(worker.email)
+                        worker.email
+                      }  
                     </TableCell>
                     <TableCell align='left'>
                       {

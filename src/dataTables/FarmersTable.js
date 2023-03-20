@@ -13,19 +13,33 @@ import axios from 'axios';
 import {useState, useEffect} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 
-function createData( ID, Name, Lattitude, Longitute, NoOfCages, HasBarge) {
-  return {  ID, Name, Lattitude, Longitute, NoOfCages, HasBarge };
-}
 
-const rows = [
-    createData(1, 'farm1', 13.24171354, 12.87263, 5, 1),
-    createData(2, 'farm2', 23.24171354, 22.87263, 1, 0),
-    createData(3, 'farm3', 33.24171354, 32.87263, 2, 1),
-    createData(4, 'farm4', 43.24171354, 42.87263, 3, 1),
-    createData(5, 'farm5', 53.24171354, 52.87263, 4, 0),
-];
+export default function FarmersTable(props) {
 
-export default function BasicTable() {
+  const localFarmList = props.farmList;
+  
+  const [deletingFarm, setDeletingFarm] = useState(null);
+  const [openDeleteModal, setDeletePopupModal] = useState(false);
+
+  const handleDeleteClick = (farm) =>{  
+    setDeletingFarm(farm);
+    setDeletePopupModal(true);
+  }
+
+  const handleDeleteAction = () =>{
+    axios.delete(`http://localhost:12759/api/Farm/${deletingFarm.id}`)
+      .then(response => {
+        console.log(response.data);
+        handleCloseDeletePopup();
+        props.onTableRefresh();
+
+      });
+  }
+
+  const handleCloseDeletePopup = () => {
+    setDeletePopupModal(false);
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -43,48 +57,73 @@ export default function BasicTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.ID}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell align='right'>
-              </TableCell>
-              <TableCell align="right">{row.ID}</TableCell>
-              <TableCell align="right">{row.Name}</TableCell>
-              <TableCell align="right">{row.Lattitude}</TableCell>
-              <TableCell align="right">{row.Longitute}</TableCell>
-              <TableCell align="right">{row.NoOfCages}</TableCell>
-              <TableCell align="right">{row.HasBarge}</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained" 
-                  onClick={null}
+          {
+            localFarmList.map((farm) => {
+              
+              return(
+                <TableRow
+                  key={farm.id}
+                  hover role = "checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  Workers
-                </Button>
-              </TableCell>
-              <TableCell >
-                <Button
-                  variant="contained" 
-                  onClick={null}
-                >
-                  Edit
-                </Button>
-              </TableCell>
-              <TableCell >
-                <Button
-                  variant="contained" 
-                  onClick={null}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+                  <TableCell align='right'>
+                  </TableCell>
+                  <TableCell align="right">{farm.id}</TableCell>
+                  <TableCell align="right">{farm.name}</TableCell>
+                  <TableCell align="right">{parseFloat(farm.latitude.toString())}</TableCell>
+                  <TableCell align="right">{parseFloat(farm.longitude.toString())}</TableCell>
+                  <TableCell align="right">{(farm.noOfCages)}</TableCell>
+                  <TableCell align="right">{ farm.hasBarge.toString() === 'true'? "Yes": "No"}</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained" 
+                      onClick={null}
+                    >
+                      Workers
+                    </Button>
+                  </TableCell>
+                  <TableCell >
+                    <Button
+                      variant="contained" 
+                      onClick={null}
+                    >
+                      Edit
+                    </Button>
+                  </TableCell>
+                  <TableCell >
+                    <Button
+                      variant="contained" 
+                      onClick={
+                        //null
+                        //() => handleTableRefresh()
+                        () => 
+                          handleDeleteClick(farm)
+                      }
+                    >
+                      {/* {console.log(tablerRefreshKey)} */}
+                      Delete
+                    </Button>
+                  </TableCell>
 
-            </TableRow>
-          ))}
+                </TableRow>
+            );
+          })
+          }
         </TableBody>
       </Table>
+      <Modal
+        open = {openDeleteModal}
+      >
+        <ConfirmationPopup 
+          confirmationMessage={"Are you sure you want to delete this farm?"}
+          confirmButtonMessage={"Delete"}
+          confirmedAction = {handleDeleteAction}
+          openPopupModal ={setDeletePopupModal}
+          closePopupModal= {handleCloseDeletePopup}
+
+        />
+        
+      </Modal>
     </TableContainer>
   );
 }
