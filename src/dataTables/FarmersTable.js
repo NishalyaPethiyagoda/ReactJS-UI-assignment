@@ -22,8 +22,9 @@ export default function FarmersTable(props) {
   
   const [deletingFarm, setDeletingFarm] = useState(null);
   const [openDeleteModal, setDeletePopupModal] = useState(false);
-  const [openUpdateModal, setUpdatePopupModal] = useState(false);
-  const [openEditModal , setEditPopupModal] = useState(false);
+  const [selectedFarm, setSelectedFarm] = useState(null);
+  const [openEditModal , setEditPopup] = useState(false);
+  const [editSubmitted, isEditSubmitted] = useState(false);
 
   const handleDeleteClick = (farm) =>{  
     setDeletingFarm(farm);
@@ -44,9 +45,13 @@ export default function FarmersTable(props) {
     setDeletePopupModal(false);
   }
 
-  const handleUpdateFarm = () => {
-
+  async function handleEditFarm(farm) {
+    setSelectedFarm(farm);
+    setEditPopup(true);
+    var variable =  (editSubmitted==='true')? await props.onTableRefresh() : isEditSubmitted(false) ;
   }
+
+  
 
   return (
     <TableContainer component={Paper}>
@@ -93,7 +98,7 @@ export default function FarmersTable(props) {
                   <TableCell >
                     <Button
                       variant="contained" 
-                      onClick={null}
+                      onClick={() => handleEditFarm(farm)}
                     >
                       Edit
                     </Button>
@@ -101,9 +106,7 @@ export default function FarmersTable(props) {
                   <TableCell >
                     <Button
                       variant="contained" 
-                      onClick={
-                        () => handleDeleteClick(farm)
-                      }
+                      onClick={ () => handleDeleteClick(farm) }
                     >
                       {/* {console.log(tablerRefreshKey)} */}
                       Delete
@@ -151,7 +154,9 @@ export default function FarmersTable(props) {
         open ={openEditModal}
       >
         <EditFarm
-          OpenUpdatePopupModal={setEditPopupModal}
+          onEditSubmit = {isEditSubmitted}
+          selectedFarm={selectedFarm}
+          setEditPopupModal={setEditPopup}
         ></EditFarm>
       </Modal>
     </TableContainer>

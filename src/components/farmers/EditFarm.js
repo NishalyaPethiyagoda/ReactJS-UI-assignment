@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import  Modal  from '@mui/material/Modal';
 import  Box  from '@mui/material/Box';
 import  Typography  from '@mui/material/Typography';
+import { MenuItem, TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const style = {
     position: 'absolute',
@@ -17,11 +20,33 @@ const style = {
     p: 4,
   }; 
 
-function EditFarm( {OpenUpdatePopupModal} ) {
+function EditFarm( {selectedFarm , setEditPopupModal} ) {
+
+    const [farm, setSelectedFarm] = useState(selectedFarm);
+    const [closeModal, setCloseModal] = useState(false);
+
+    const yesNoDropdown = [
+        {id: 1, label: "Yes", value: true},
+        {id: 2, label: "No" , value: false},
+    ];
+
+    const handleSubmit = (farm) => {
+        axios.put(`http://localhost:12759/api/Farm/${farm.id}`, farm)
+            .then(
+                response => console.log(response.data)
+                
+            );
+            setEditPopupModal(false);
+    }
+
+    const handleCloseModal = () => {
+        setEditPopupModal(false);
+    }
+
     return (
         <div>
             <Modal
-                open = {OpenUpdatePopupModal}
+                open = {setEditPopupModal}
 
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -29,9 +54,78 @@ function EditFarm( {OpenUpdatePopupModal} ) {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title">
-                        Update Farm
+                        Edit Farm
                     </Typography>
-
+                    <TextField
+                        id='outlined-basic'
+                        label="Name"
+                        sx={{minWidth:295 , marginTop: 3}}
+                        variant="outlined"
+                        defaultValue={farm.name}
+                        onChange={(e) => setSelectedFarm({...farm, name: e.target.value})}
+                        autoComplete= "off"
+                    />
+                    <TextField
+                        id='outlined-basic'
+                        label="Lattitude"
+                        sx={{minWidth:295 , marginTop: 3}}
+                        variant="outlined"
+                        defaultValue={farm.latitude}
+                        onChange={(e) => setSelectedFarm({...farm, latitude: e.target.value})}
+                        autoComplete= "off"
+                    />
+                    <TextField
+                        id='outlined-basic'
+                        label="Longitude"
+                        sx={{minWidth:295 , marginTop: 3}}
+                        variant="outlined"
+                        defaultValue={farm.longitude}
+                        onChange={(e) => setSelectedFarm({...farm, longitude: e.target.value})}
+                        autoComplete= "off"
+                    />
+                    <TextField
+                        id='outlined-basic'
+                        label="Number of Cages"
+                        sx={{minWidth:295 , marginTop: 3}}
+                        variant="outlined"
+                        defaultValue={farm.noOfCages}
+                        onChange={(e) => setSelectedFarm({...farm, noOfCages: e.target.value})}
+                        autoComplete= "off"
+                    />
+                    <TextField
+                        select
+                        id='outlined-basic'
+                        label="Farm has a Barge?"
+                        sx={{minWidth:295 , marginTop: 3}}
+                        variant="outlined"
+                        defaultValue={farm.hasBarge}
+                        onChange={(e) => setSelectedFarm({...farm, hasBarge: e.target.value})}
+                        autoComplete= "off"
+                    >
+                        {yesNoDropdown.map( (dropDownValue) => (
+                            <MenuItem key={dropDownValue.id} value ={dropDownValue.value}>
+                                {dropDownValue.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <Button
+                        variant='contained'
+                        onClick={
+                           // null
+                            //console.log(farm)
+                            ()=> {handleSubmit(farm) }
+                        }
+                        sx = {{margin: 3, minWidth: 100}}
+                    >
+                        Submit
+                    </Button>
+                    <Button
+                        variant='contained'
+                        onClick={() => handleCloseModal()}
+                        sx = {{margin: 3, minWidth: 100}}
+                    >
+                        Close
+                    </Button>
                 </Box>
             </Modal>
         </div>
