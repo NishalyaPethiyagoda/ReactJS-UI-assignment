@@ -12,6 +12,7 @@ import { Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
+import UpdateFarm from '../components/farmers/UpdateFarm';
 
 
 export default function FarmersTable(props) {
@@ -20,6 +21,7 @@ export default function FarmersTable(props) {
   
   const [deletingFarm, setDeletingFarm] = useState(null);
   const [openDeleteModal, setDeletePopupModal] = useState(false);
+  const [openUpdateModal, setUpdatePopupModal] = useState(false);
 
   const handleDeleteClick = (farm) =>{  
     setDeletingFarm(farm);
@@ -38,6 +40,10 @@ export default function FarmersTable(props) {
 
   const handleCloseDeletePopup = () => {
     setDeletePopupModal(false);
+  }
+
+  const handleUpdateFarm = () => {
+
   }
 
   return (
@@ -94,10 +100,7 @@ export default function FarmersTable(props) {
                     <Button
                       variant="contained" 
                       onClick={
-                        //null
-                        //() => handleTableRefresh()
-                        () => 
-                          handleDeleteClick(farm)
+                        () => handleDeleteClick(farm)
                       }
                     >
                       {/* {console.log(tablerRefreshKey)} */}
@@ -122,7 +125,16 @@ export default function FarmersTable(props) {
           closePopupModal= {handleCloseDeletePopup}
 
         />
-        
+      </Modal>
+      <Modal
+        open = {openUpdateModal}
+      >
+        <UpdateFarm
+          //farm={farm}
+          openPopupModal={setUpdatePopupModal}
+        >
+
+        </UpdateFarm>
       </Modal>
     </TableContainer>
   );
