@@ -44,7 +44,7 @@ function AddFarm(props) {
         axios.post('http://localhost:12759/api/Farm', newFarm )
         .then(response => {
             console.log(response.data);
-           // props.onAddFarm();
+           props.onAddFarm();
            setAddFarmModal(false);
         });
     }
@@ -143,3 +143,4 @@ function AddFarm(props) {
 }
 
 export default AddFarm
+

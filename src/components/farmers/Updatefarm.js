@@ -1,11 +1,11 @@
-import React from 'react'
+// import React from 'react'
 
-function Updatefarm() {
-    return (
-        <div>
+// function Updatefarm() {
+//     return (
+//         <div>
             
-        </div>
-    )
-}
+//         </div>
+//     )
+// }
 
-export default Updatefarm
+// export default Updatefarm
