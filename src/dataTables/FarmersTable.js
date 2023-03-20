@@ -12,7 +12,8 @@ import { Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
-import { UpdateFarm } from '../components/farmers/UpdateFarm';
+import EditFarm from '../components/farmers/EditFarm';
+
 
 
 export default function FarmersTable(props) {
@@ -22,6 +23,7 @@ export default function FarmersTable(props) {
   const [deletingFarm, setDeletingFarm] = useState(null);
   const [openDeleteModal, setDeletePopupModal] = useState(false);
   const [openUpdateModal, setUpdatePopupModal] = useState(false);
+  const [openEditModal , setEditPopupModal] = useState(false);
 
   const handleDeleteClick = (farm) =>{  
     setDeletingFarm(farm);
@@ -114,26 +116,43 @@ export default function FarmersTable(props) {
           }
         </TableBody>
       </Table>
-      <Modal
-        open = {openDeleteModal}
+      {/* <Modal
+        open = {Boolean(openDeleteModal)}
       >
-        <ConfirmationPopup 
-          confirmationMessage={"Are you sure you want to delete this farm?"}
-          confirmButtonMessage={"Delete"}
-          confirmedAction = {handleDeleteAction}
-          openPopupModal ={setDeletePopupModal}
-          closePopupModal= {handleCloseDeletePopup}
+        {React.forwardRef((props, ref) => (
 
-        />
+          <ConfirmationPopup 
+            {...props}
+            forwardedRef={ref}
+
+            confirmationMessage={"Are you sure you want to delete this farm?"}
+            confirmButtonMessage={"Delete"}
+            confirmedAction = {handleDeleteAction}
+            openPopupModal ={setDeletePopupModal}
+            closePopupModal= {handleCloseDeletePopup}
+          />
+        ))}
+        
+      </Modal> */}
+      <Modal
+        open = {Boolean(openDeleteModal)}
+      >
+          <ConfirmationPopup 
+
+            confirmationMessage={"Are you sure you want to delete this farm?"}
+            confirmButtonMessage={"Delete"}
+            confirmedAction = {handleDeleteAction}
+            openPopupModal ={setDeletePopupModal}
+            closePopupModal= {handleCloseDeletePopup}
+          />
+        
       </Modal>
       <Modal
-        open = {openUpdateModal}
+        open ={openEditModal}
       >
-        <UpdateFarm
-          setOpenUpdateModal ={ setUpdatePopupModal}
-        >
-
-        </UpdateFarm>
+        <EditFarm
+          OpenUpdatePopupModal={setEditPopupModal}
+        ></EditFarm>
       </Modal>
     </TableContainer>
   );

@@ -27,19 +27,15 @@ function Farms() {
     }
     return (
         <div>
-            <body>
-                <div>
-                <Container>
-                    <h1>Farms</h1>
-                </Container>
-                <Container align="right" >
-                    <AddFarm onAddFarm = {handleTableRefresh}></AddFarm>
-                </Container>
-                <Box sx={{margin: '34px'}}>
-                    <FarmersTable farmList={farmList} onTableRefresh={handleTableRefresh}></FarmersTable>
-                </Box>
-                </div>
-            </body>
+            <Container>
+                <h1>Farms</h1>
+            </Container>
+            <Container align="right" >
+                <AddFarm onAddFarm = {handleTableRefresh}></AddFarm>
+            </Container>
+            <Box sx={{margin: '34px'}}>
+                <FarmersTable farmList={farmList} onTableRefresh={handleTableRefresh}></FarmersTable>
+            </Box>
         </div>
     )
 }
