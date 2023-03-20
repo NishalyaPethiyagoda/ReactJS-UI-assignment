@@ -12,7 +12,6 @@ import { Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
-import UpdateFarm from '../components/farmers/UpdateFarm';
 
 
 export default function FarmersTable(props) {
@@ -125,16 +124,6 @@ export default function FarmersTable(props) {
           closePopupModal= {handleCloseDeletePopup}
 
         />
-      </Modal>
-      <Modal
-        open = {openUpdateModal}
-      >
-        <UpdateFarm
-          //farm={farm}
-          openPopupModal={setUpdatePopupModal}
-        >
-
-        </UpdateFarm>
       </Modal>
     </TableContainer>
   );
