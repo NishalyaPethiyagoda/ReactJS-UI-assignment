@@ -87,7 +87,7 @@ export default function FarmersTable(props) {
                       variant="contained" 
                       onClick={null}
                     >
-                      Edit
+                      Update
                     </Button>
                   </TableCell>
                   <TableCell >
