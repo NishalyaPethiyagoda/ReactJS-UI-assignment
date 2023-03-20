@@ -12,6 +12,7 @@ import axios from 'axios';
 function Farms() {
 
     const [farmList, getFarmList] = useState([]);
+
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
 
     useEffect(()=>{
@@ -32,10 +33,10 @@ function Farms() {
                     <h1>Farms</h1>
                 </Container>
                 <Container align="right" >
-                    <AddFarm onAddFarm = {setTableRefresh}></AddFarm>
+                    <AddFarm onAddFarm = {handleTableRefresh}></AddFarm>
                 </Container>
                 <Box sx={{margin: '34px'}}>
-                    <FarmersTable farmList={farmList} tableRefresh = {handleTableRefresh}></FarmersTable>
+                    <FarmersTable farmList={farmList} onTableRefresh={handleTableRefresh}></FarmersTable>
                 </Box>
                 </div>
             </body>
