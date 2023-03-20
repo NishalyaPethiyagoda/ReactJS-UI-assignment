@@ -12,6 +12,7 @@ import { Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState, useEffect} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
+import { UpdateFarm } from '../components/farmers/UpdateFarm';
 
 
 export default function FarmersTable(props) {
@@ -125,133 +126,15 @@ export default function FarmersTable(props) {
 
         />
       </Modal>
+      <Modal
+        open = {openUpdateModal}
+      >
+        <UpdateFarm
+          setOpenUpdateModal ={ setUpdatePopupModal}
+        >
+
+        </UpdateFarm>
+      </Modal>
     </TableContainer>
   );
 }
-
-
-
-
-// import * as React from 'react';
-// import Paper from '@mui/material/Paper';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TablePagination from '@mui/material/TablePagination';
-// import TableRow from '@mui/material/TableRow';
-
-// const columns = [
-// //    {
-// //     id: 'picUrl',
-// //     label: 'Image',
-// //     minWidth: 170,
-// //     align: 'right',
-// //     // format: (value) => value.toFixed(2),
-// //   },
-//   { 
-//     id: 'Id', 
-//     label: 'ID', 
-//     minWidth: 170,
-//     format: (value) => value.toLocaleString('en-US'), },
-//   { 
-//     id: 'name', 
-//     label: 'Name', 
-//     minWidth: 170, 
-//     format: (value) => value.toLocaleString('en-US'),},
-//   {
-//     id: 'lattitude',
-//     label: 'Lattitude',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toFixed(2),    },
-//   {
-//     id: 'longitute',
-//     label: 'Longitute',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toFixed(2),      },
-//   {
-//     id: 'NoOfCages',
-//     label: 'No of Cages',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toLocaleString('en-US'), },
-//   {
-//     id: 'HasBarge',
-//     label: 'Has Barge',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toLocaleString('en-US'),     },
-
-// ];
-
-// function createData(ID, Name, Lattitude, Longitute, NoOfCages, HasBarge) {
-
-//   return { ID, Name, Lattitude, Longitute, NoOfCages, HasBarge};
-// }
-
-// const rows = [
-//   createData(1, 'farm1', 13.24171354, 12.87263, 5, 1),
-//   createData(2, 'farm2', 23.24171354, 22.87263, 1, 0),
-//   createData(3, 'farm3', 33.24171354, 32.87263, 2, 1),
-//   createData(4, 'farm4', 43.24171354, 42.87263, 3, 1),
-//   createData(5, 'farm5', 53.24171354, 52.87263, 4, 0),
-
-// ];
-
-// export default function FarmersTable() {
-//   const [page, setPage] = React.useState(0);
-//   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(+event.target.value);
-//     setPage(0);
-//   };
-
-//   return (
-//     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-//       <TableContainer sx={{ maxHeight: 520 }}>
-//         <Table stickyHeader aria-label="sticky table">
-//           <TableHead>
-//             <TableRow>
-//               {columns.map((column) => (
-//                 <TableCell
-//                   key={column.id}
-//                   align={column.align}
-//                   style={{ minWidth: column.minWidth }}
-//                 >
-//                   {column.label}
-//                 </TableCell>
-//               ))}
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {rows
-//               .map((row) => {
-//                 return (
-//                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-//                     {columns.map((column) => {
-//                       const value = row[column.id];
-//                       return (
-//                         <TableCell key={column.id} align={column.align}>
-//                           {column.format && typeof value === 'number'
-//                             ? column.format(value)
-//                             : value}
-//                         </TableCell>
-//                       );
-//                     })}
-//                   </TableRow>
-//                 );
-//               })}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//     </Paper>
-//   );
-// }
