@@ -30,13 +30,8 @@ function AddFarm(props) {
         {id: 2, label: "No" , value: false},
     ];
 
-    const handleAddFarmClick = () => {
-        setAddFarmModal(true);
-    }
-
-    const handleClose = () =>{
-        setAddFarmModal(false);
-    }
+    const handleClose = () => setAddFarmModal(false);
+    const handleAddFarmClick = () => setAddFarmModal(true);
 
     const handleSubmit= () =>{
         axios.post('http://localhost:12759/api/Farm', newFarm )

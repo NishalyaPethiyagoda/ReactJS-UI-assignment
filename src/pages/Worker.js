@@ -1,13 +1,39 @@
 
 import { Container } from '@mui/system';
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import WorkersTable from '../dataTables/WorkersTable';
 import Box from '@mui/material/Box';
 import AddWorker from '../components/workers/AddWorker';
+import axios from 'axios';
 
 
 
 function Workers() {
+
+    const [designations, setDesignations] = useState([]);
+    useEffect(()=>{
+        
+        axios.get('http://localhost:12759/api/WorkerDesignation')
+            .then(response => {
+                setDesignations(response.data);
+            })
+    }, []);
+
+    const [workerList, setWorkerList] = useState([]);
+    const [tableRefreshKey, setTableRefeshKey] = useState(0);
+
+    useEffect(() => {
+        axios.get('http://localhost:12759/api/worker')
+          .then(response => {
+            setWorkerList(response.data);
+          });
+          
+      }, [tableRefreshKey]);
+
+    const handleTableResfresh= ( ) =>{
+        setTableRefeshKey(tableRefreshKey + 1);
+    }
+    
     return (
         <div>
             <Container sx={{color:"Secondary"}}>
@@ -15,11 +41,18 @@ function Workers() {
             </Container>
 
             <Container align="right" >
-                <AddWorker></AddWorker>
+                <AddWorker
+                    designations = {designations}
+                    onAddWorker = {handleTableResfresh}
+                ></AddWorker>
             </Container>
 
             <Box sx={{margin: '34px'}}>
-                <WorkersTable></WorkersTable>
+                <WorkersTable
+                    designations= { designations}
+                    workerList = {workerList}
+                    tableRefresh = {handleTableResfresh}
+                ></WorkersTable>
             </Box>
                 
         </div>

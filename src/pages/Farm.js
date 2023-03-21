@@ -11,13 +11,13 @@ import axios from 'axios';
 
 function Farms() {
 
-    const [farmList, getFarmList] = useState([]);
-
     const yesNoDropdown = [
         {id: 1, label: "Yes", value: true},
         {id: 2, label: "No" , value: false},
     ];
 
+    //
+    const [farmList, getFarmList] = useState([]);
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
 
     useEffect(()=>{
@@ -30,7 +30,7 @@ function Farms() {
     const handleTableRefresh = () => {
         setTableRefresh(tablerRefreshKey+1);
     }
-    
+
     return (
         <div>
             <Container>
