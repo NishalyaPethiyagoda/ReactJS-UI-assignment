@@ -20,33 +20,30 @@ const style = {
     p: 4,
   }; 
 
-function EditFarm( {selectedFarm , setEditPopupModal} ) {
+function EditFarm( props ) {
 
-    const [farm, setSelectedFarm] = useState(selectedFarm);
-    const [closeModal, setCloseModal] = useState(false);
-
-    const yesNoDropdown = [
-        {id: 1, label: "Yes", value: true},
-        {id: 2, label: "No" , value: false},
-    ];
+    const [farm, setSelectedFarm] = useState(props.selectedFarm);
 
     const handleSubmit = (farm) => {
         axios.put(`http://localhost:12759/api/Farm/${farm.id}`, farm)
-            .then(
-                response => console.log(response.data)
-                
+            .then(response => {
+                    console.log(response.data)
+                    props.onTableRefresh();
+                }
+                    
             );
-            setEditPopupModal(false);
+        props.setEditPopupModal(false);
+            
     }
 
     const handleCloseModal = () => {
-        setEditPopupModal(false);
+        props.setEditPopupModal(false);
     }
 
     return (
         <div>
             <Modal
-                open = {setEditPopupModal}
+                open = {props.setEditPopupModal}
 
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -102,7 +99,7 @@ function EditFarm( {selectedFarm , setEditPopupModal} ) {
                         onChange={(e) => setSelectedFarm({...farm, hasBarge: e.target.value})}
                         autoComplete= "off"
                     >
-                        {yesNoDropdown.map( (dropDownValue) => (
+                        {props.yesNoDropdown.map( (dropDownValue) => (
                             <MenuItem key={dropDownValue.id} value ={dropDownValue.value}>
                                 {dropDownValue.label}
                             </MenuItem>
@@ -110,11 +107,7 @@ function EditFarm( {selectedFarm , setEditPopupModal} ) {
                     </TextField>
                     <Button
                         variant='contained'
-                        onClick={
-                           // null
-                            //console.log(farm)
-                            ()=> {handleSubmit(farm) }
-                        }
+                        onClick={()=> handleSubmit(farm) }
                         sx = {{margin: 3, minWidth: 100}}
                     >
                         Submit

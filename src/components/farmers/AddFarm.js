@@ -4,9 +4,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { MenuItem, TextField } from '@mui/material';
-import  { useEffect, useState } from 'react'
+import  { useState } from 'react'
 import axios from 'axios';
-import { Grid } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -24,7 +23,6 @@ const style = {
 function AddFarm(props) {
 
     const [openAddFarmModal, setAddFarmModal] = useState(false);
-    const [hasBarge , setHasBarge] = useState("Yes");
     const [newFarm , setNewFarm] = useState(null);
 
     const yesNoDropdown = [

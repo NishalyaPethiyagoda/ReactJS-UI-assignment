@@ -13,6 +13,11 @@ function Farms() {
 
     const [farmList, getFarmList] = useState([]);
 
+    const yesNoDropdown = [
+        {id: 1, label: "Yes", value: true},
+        {id: 2, label: "No" , value: false},
+    ];
+
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
 
     useEffect(()=>{
@@ -25,16 +30,24 @@ function Farms() {
     const handleTableRefresh = () => {
         setTableRefresh(tablerRefreshKey+1);
     }
+    
     return (
         <div>
             <Container>
                 <h1>Farms</h1>
             </Container>
             <Container align="right" >
-                <AddFarm onAddFarm = {handleTableRefresh}></AddFarm>
+                <AddFarm 
+                    onAddFarm = {handleTableRefresh} 
+                    yesNoDropdown={yesNoDropdown}
+                ></AddFarm>
             </Container>
             <Box sx={{margin: '34px'}}>
-                <FarmersTable farmList={farmList} onTableRefresh={handleTableRefresh}></FarmersTable>
+                <FarmersTable 
+                    farmList={farmList} 
+                    yesNoDropdown={yesNoDropdown}
+                    tableRefresh={handleTableRefresh} 
+                ></FarmersTable>
             </Box>
         </div>
     )

@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button, Modal } from '@mui/material';
 import axios from 'axios';
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import EditFarm from '../components/farmers/EditFarm';
 
@@ -22,10 +22,8 @@ export default function FarmersTable(props) {
   
   const [deletingFarm, setDeletingFarm] = useState(null);
   const [openDeleteModal, setDeletePopupModal] = useState(false);
-  const [selectedFarm, setSelectedFarm] = useState(null);
-  const [openEditModal , setEditPopup] = useState(false);
-  const [editSubmitted, isEditSubmitted] = useState(false);
 
+  //delete functions
   const handleDeleteClick = (farm) =>{  
     setDeletingFarm(farm);
     setDeletePopupModal(true);
@@ -36,7 +34,7 @@ export default function FarmersTable(props) {
       .then(response => {
         console.log(response.data);
         handleCloseDeletePopup();
-        props.onTableRefresh();
+        props.tableRefresh();
 
       });
   }
@@ -45,28 +43,45 @@ export default function FarmersTable(props) {
     setDeletePopupModal(false);
   }
 
-  async function handleEditFarm(farm) {
+  // edit functions
+
+  const [selectedFarm, setSelectedFarm] = useState(null);
+  const [openEditModal , setEditPopup] = useState(false);
+
+  function handleEditFarm(farm) {
     setSelectedFarm(farm);
     setEditPopup(true);
-    var variable =  (editSubmitted==='true')? await props.onTableRefresh() : isEditSubmitted(false) ;
-  }
 
-  
+    // await new Promise( (resolve) => {
+    //     const promiseIntervalID = setInterval( () => 
+    //     {
+    //       if(editSubmitted === 'true')
+    //       {
+    //         clearInterval(promiseIntervalID);
+    //         resolve();          
+    //       }
+    //     }, 100);
+    //   }
+
+    // );
+    
+    // await props.onTableRefresh();
+  }
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">Picture</TableCell>
-            <TableCell align="right">Farm ID</TableCell>
-            <TableCell align="right">Farm Name</TableCell>
-            <TableCell align="right">Lattitude</TableCell>
-            <TableCell align="right">Longitute</TableCell>
-            <TableCell align="right">No of Cages</TableCell>
-            <TableCell align="right">Has Barge?</TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right"></TableCell>
+            <TableCell align="left">Picture</TableCell>
+            {/* <TableCell align="left">Farm ID</TableCell> */}
+            <TableCell align="left">Farm Name</TableCell>
+            <TableCell align="left">Lattitude</TableCell>
+            <TableCell align="left">Longitute</TableCell>
+            <TableCell align="left">No of Cages</TableCell>
+            <TableCell align="left">Farm has Barge?</TableCell>
+            <TableCell align="left"></TableCell>
+            <TableCell align="left"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -81,13 +96,13 @@ export default function FarmersTable(props) {
                 >
                   <TableCell align='right'>
                   </TableCell>
-                  <TableCell align="right">{farm.id}</TableCell>
-                  <TableCell align="right">{farm.name}</TableCell>
-                  <TableCell align="right">{parseFloat(farm.latitude.toString())}</TableCell>
-                  <TableCell align="right">{parseFloat(farm.longitude.toString())}</TableCell>
-                  <TableCell align="right">{(farm.noOfCages)}</TableCell>
-                  <TableCell align="right">{ farm.hasBarge.toString() === 'true'? "Yes": "No"}</TableCell>
-                  <TableCell align="right">
+                  {/* <TableCell align="left">{farm.id}</TableCell> */}
+                  <TableCell align="left">{farm.name}</TableCell>
+                  <TableCell align="left">{parseFloat(farm.latitude.toString())}</TableCell>
+                  <TableCell align="left">{parseFloat(farm.longitude.toString())}</TableCell>
+                  <TableCell align="left">{(farm.noOfCages)}</TableCell>
+                  <TableCell align="left">{ farm.hasBarge.toString() === 'true'? "Yes": "No"}</TableCell>
+                  <TableCell align="left">
                     <Button
                       variant="contained" 
                       onClick={null}
@@ -119,6 +134,31 @@ export default function FarmersTable(props) {
           }
         </TableBody>
       </Table>
+      
+      <Modal
+        open = {Boolean(openDeleteModal)}
+      >
+          <ConfirmationPopup 
+
+            confirmationMessage={"Are you sure you want to delete this farm?"}
+            confirmButtonMessage={"Delete"}
+            confirmedAction = {handleDeleteAction}
+            openPopupModal ={setDeletePopupModal}
+            closePopupModal= {handleCloseDeletePopup}
+          />
+        
+      </Modal>
+      <Modal
+        open ={openEditModal}
+      >
+        <EditFarm
+          yesNoDropdown={props.yesNoDropdown}
+          onTableRefresh = {props.tableRefresh}
+          selectedFarm={selectedFarm}
+          setEditPopupModal={setEditPopup}
+        ></EditFarm>
+      </Modal>
+
       {/* <Modal
         open = {Boolean(openDeleteModal)}
       >
@@ -137,28 +177,6 @@ export default function FarmersTable(props) {
         ))}
         
       </Modal> */}
-      <Modal
-        open = {Boolean(openDeleteModal)}
-      >
-          <ConfirmationPopup 
-
-            confirmationMessage={"Are you sure you want to delete this farm?"}
-            confirmButtonMessage={"Delete"}
-            confirmedAction = {handleDeleteAction}
-            openPopupModal ={setDeletePopupModal}
-            closePopupModal= {handleCloseDeletePopup}
-          />
-        
-      </Modal>
-      <Modal
-        open ={openEditModal}
-      >
-        <EditFarm
-          onEditSubmit = {isEditSubmitted}
-          selectedFarm={selectedFarm}
-          setEditPopupModal={setEditPopup}
-        ></EditFarm>
-      </Modal>
     </TableContainer>
   );
 }
