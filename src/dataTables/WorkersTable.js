@@ -126,7 +126,11 @@ export default function WorkersTable(props) {
           open={openUpdateModal}
           autocomplete="off"
         >
-          <UpdateWorker  worker={selectedWorker}  setOpenUpdateModal={setOpenUpdateModal}  />
+          <UpdateWorker  
+            worker={selectedWorker}  
+            setOpenUpdateModal={setOpenUpdateModal}  
+            tableRefresh = {props.tableRefresh}
+          />
         </Modal>
 
         <Modal

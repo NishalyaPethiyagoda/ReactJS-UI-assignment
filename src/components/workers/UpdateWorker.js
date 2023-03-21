@@ -23,11 +23,10 @@ const style = {
   };
 
 
-function UpdateWorker({worker, setOpenUpdateModal } ) {
+function UpdateWorker(props ) {
     
     const [positions, setPositions] = useState([]);
-    const [newWorker, setWorker] = useState(worker);
-    const [updateAlert, setUpdateAlert] = useState("");
+    const [editingWorker, setWorker] = useState(props.worker);
   
     useEffect(()=>{
         axios.get('http://localhost:12759/api/WorkerDesignation')
@@ -36,25 +35,25 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
             })
     }, []);
 
-    const updateWorkerSubmit = (newWorker) => {
-        console.log(newWorker);
+    const updateWorkerSubmit = (editingWorker) => {
+        console.log(editingWorker);
 
-        axios.put(`http://localhost:12759/api/Worker/${newWorker.id}`, newWorker)
-            .then( response => setUpdateAlert(response.data))
-
-        console.log(updateAlert);
-        setWorker(newWorker);
-        setOpenUpdateModal(false);
-        alert(updateAlert);
+        axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
+            .then( response => {
+                console.log(response.data);
+                
+                props.tableRefresh();
+            });
+        props.setOpenUpdateModal(false);
     }
 
     const handleClose = () =>{
-        setOpenUpdateModal(false);
+        props.setOpenUpdateModal(false);
     }
     return (
         <div>
             <Modal
-                open={setOpenUpdateModal}
+                open={props.setOpenUpdateModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -66,16 +65,16 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                     <TextField 
                         id="outlined-basic" 
                         label="Name" 
-                        defaultValue={worker.name} 
-                        onChange={(e) => setWorker({...newWorker, name: e.target.value})}
+                        defaultValue={editingWorker.name} 
+                        onChange={(e) => setWorker({...editingWorker, name: e.target.value})}
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined" size='100px'/>
                           
                     <TextField 
                         id="outlined-basic" 
                         label="Age" 
-                        defaultValue={worker.age} 
-                        onChange={(e) => setWorker({...newWorker, age: e.target.value})}
+                        defaultValue={editingWorker.age} 
+                        onChange={(e) => setWorker({...editingWorker, age: e.target.value})}
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined" />
                         
@@ -88,8 +87,8 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                                 variant="outlined"
                                 type="date"
                                 //defaultValue={DateTime.parse(worker.certifiedDate)}
-                                defaultValue={Date.parse(worker.certifiedDate)}
-                                onChange={(e) => setWorker({ ...newWorker, certifiedDate: e.target.value })}
+                                defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
+                                onChange={(e) => setWorker({ ...editingWorker, certifiedDate: e.target.value })}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -101,16 +100,16 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                         id="outlined-basic" 
                         label="Email" sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"
-                        defaultValue={worker.email}
-                        onChange={(e) => setWorker({...newWorker, email: e.target.value})}
+                        defaultValue={editingWorker.email}
+                        onChange={(e) => setWorker({...editingWorker, email: e.target.value})}
                     />
 
                     <TextField 
                         select 
                         id="outlined-select" 
                         label="Designation" 
-                        defaultValue={parseInt(worker.designationId)}
-                        onChange={(e) => setWorker({...newWorker, designationId: e.target.value})}
+                        defaultValue={parseInt(editingWorker.designationId)}
+                        onChange={(e) => setWorker({...editingWorker, designationId: e.target.value})}
                         
                         sx={{minWidth: 295, marginTop:3}}
                     >
@@ -127,7 +126,7 @@ function UpdateWorker({worker, setOpenUpdateModal } ) {
                     </TextField>
                     <Button 
                         variant="contained" 
-                        onClick={() => updateWorkerSubmit(newWorker)} 
+                        onClick={() => updateWorkerSubmit(editingWorker)} 
                         sx={{margin: 3, minWidth:100}}
                     >
                         Submit

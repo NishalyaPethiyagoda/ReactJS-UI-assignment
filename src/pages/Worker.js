@@ -10,6 +10,15 @@ import axios from 'axios';
 
 function Workers() {
 
+    const [designations, setDesignations] = useState([]);
+    useEffect(()=>{
+        
+        axios.get('http://localhost:12759/api/WorkerDesignation')
+            .then(response => {
+                setDesignations(response.data);
+            })
+    }, []);
+
     const [workerList, setWorkerList] = useState([]);
     const [tableRefreshKey, setTableRefeshKey] = useState(0);
 
@@ -33,12 +42,14 @@ function Workers() {
 
             <Container align="right" >
                 <AddWorker
+                    designations = {designations}
                     onAddWorker = {handleTableResfresh}
                 ></AddWorker>
             </Container>
 
             <Box sx={{margin: '34px'}}>
                 <WorkersTable
+                    designations= { designations}
                     workerList = {workerList}
                     tableRefresh = {handleTableResfresh}
                 ></WorkersTable>
