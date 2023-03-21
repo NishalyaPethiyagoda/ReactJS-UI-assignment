@@ -56,6 +56,7 @@ function UpdateWorker(props ) {
                 open={props.setOpenUpdateModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                autoComplete="off"
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">

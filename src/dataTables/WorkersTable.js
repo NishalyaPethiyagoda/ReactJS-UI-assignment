@@ -8,9 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Button, Modal } from '@mui/material';
 import axios from 'axios';
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import UpdateWorker from '../components/workers/UpdateWorker';
-import Box from '@mui/material/Box';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 
 
@@ -54,6 +53,14 @@ export default function WorkersTable(props) {
   const handleCloseDeletePopup = () => {
     setDeletePopupModal(false);
   }
+
+  const UpdateWorkerWithRef = React.forwardRef( (props, ref) => {
+    return <UpdateWorker {...props} ref={ref} />
+  })
+
+  const ConfirmationPopupWithRef = React.forwardRef( (props, ref) => {
+    return <ConfirmationPopup {...props} ref={ref} />
+  })
 
   return (
     
@@ -124,9 +131,8 @@ export default function WorkersTable(props) {
         </Table>
         <Modal
           open={openUpdateModal}
-          autocomplete="off"
         >
-          <UpdateWorker  
+          <UpdateWorkerWithRef  
             worker={selectedWorker}  
             setOpenUpdateModal={setOpenUpdateModal}  
             tableRefresh = {props.tableRefresh}
@@ -137,15 +143,14 @@ export default function WorkersTable(props) {
           open= {openDeletePopupModal}
           onClose = {handleCloseDeletePopup}
         >
-          <ConfirmationPopup 
+          <ConfirmationPopupWithRef 
             confirmationMessage={"Are you sure to delete this worker?"}
             confirmButtonMessage= {"Delete"}
             deletingEntity = {deletingWorker}
             confirmedAction ={handleDeleteAction}
             openPopupModal={setDeletePopupModal}
             closePopupModal = {handleCloseDeletePopup}
-          >
-          </ConfirmationPopup>
+          />
         </Modal>
       </TableContainer>
   );
