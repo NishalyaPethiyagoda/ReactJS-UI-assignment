@@ -14,31 +14,25 @@ import Box from '@mui/material/Box';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 
 
-export default function WorkersTable() {
+export default function WorkersTable(props) {
 
-  const [workerList, setWorkerList] = useState([]);
+  const workerList= props.workerList;
+
+//update functions
 
   const [selectedWorker, setSelectedWorker] = useState(null );
-  const [deletingWorker, setDeletingWorker] = useState(null);
-
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-
-  const [openDeletePopupModal, setDeletePopupModal] = useState(false);
-
-  //const [deletedAlert, setDeletedAlert] = useState("");
-
-  useEffect(() => {
-    axios.get('http://localhost:12759/api/worker')
-      .then(response => {
-        setWorkerList(response.data);
-      });
-      
-  });
 
   const handleEditClick = (worker) => {
     setSelectedWorker(worker);
     setOpenUpdateModal(true);
   };
+
+//delete function 
+
+  const [deletingWorker, setDeletingWorker] = useState(null);
+  const [openDeletePopupModal, setDeletePopupModal] = useState(false);
+  //const [deletedAlert, setDeletedAlert] = useState("");
 
   const handleDeleteClick = (worker) => {
     setDeletingWorker(worker);
@@ -48,7 +42,11 @@ export default function WorkersTable() {
   const handleDeleteAction = (worker) =>{
 
     axios.delete(`http://localhost:12759/api/worker/${worker.id}`)
-    //  .then(response=> {setDeletedAlert(response.data)});
+       .then(response=> {
+          // setDeletedAlert(response.data);
+          console.log(response.data);
+          props.tableRefresh();
+        });
 
     setDeletePopupModal(false);
   }

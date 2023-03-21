@@ -19,11 +19,11 @@ import EditFarm from '../components/farmers/EditFarm';
 export default function FarmersTable(props) {
 
   const localFarmList = props.farmList;
-  
+
+  //delete functions
   const [deletingFarm, setDeletingFarm] = useState(null);
   const [openDeleteModal, setDeletePopupModal] = useState(false);
 
-  //delete functions
   const handleDeleteClick = (farm) =>{  
     setDeletingFarm(farm);
     setDeletePopupModal(true);

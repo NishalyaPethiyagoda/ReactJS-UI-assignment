@@ -26,7 +26,7 @@ const style = {
   p: 4,
 };
 
-function AddWorker() {
+function AddWorker(props) {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -50,11 +50,13 @@ function AddWorker() {
         axios.post('http://localhost:12759/api/Worker', newWorker)
         .then(response => {
             setpostAlert(response.data);
+            console.log(response.data);
+            props.onAddWorker();
+            
         })
         .catch(error => {
             console.log(error);
         });
-        // console.log(newWorker);
         handleClose();
     }
 
