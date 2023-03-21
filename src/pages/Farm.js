@@ -1,7 +1,6 @@
 
 import React from 'react'
 import FarmersTable from '../dataTables/FarmersTable'
-
 import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
 import AddFarm from '../components/farmers/AddFarm';
@@ -16,7 +15,6 @@ function Farms() {
         {id: 2, label: "No" , value: false},
     ];
 
-    //
     const [farmList, getFarmList] = useState([]);
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
 

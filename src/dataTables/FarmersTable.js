@@ -51,22 +51,15 @@ export default function FarmersTable(props) {
   function handleEditFarm(farm) {
     setSelectedFarm(farm);
     setEditPopup(true);
-
-    // await new Promise( (resolve) => {
-    //     const promiseIntervalID = setInterval( () => 
-    //     {
-    //       if(editSubmitted === 'true')
-    //       {
-    //         clearInterval(promiseIntervalID);
-    //         resolve();          
-    //       }
-    //     }, 100);
-    //   }
-
-    // );
-    
-    // await props.onTableRefresh();
   }
+
+  const EditFarmWithRef = React.forwardRef( (props, ref) => {
+    return <EditFarm {...props} ref={ref} />
+  })
+
+  const ConfirmationPopupWithRef = React.forwardRef( (props, ref) => {
+    return <ConfirmationPopup {...props} ref={ref} />
+  })
 
   return (
     <TableContainer component={Paper}>
@@ -138,7 +131,7 @@ export default function FarmersTable(props) {
       <Modal
         open = {Boolean(openDeleteModal)}
       >
-          <ConfirmationPopup 
+          <ConfirmationPopupWithRef 
 
             confirmationMessage={"Are you sure you want to delete this farm?"}
             confirmButtonMessage={"Delete"}
@@ -149,14 +142,14 @@ export default function FarmersTable(props) {
         
       </Modal>
       <Modal
-        open ={openEditModal}
+        open ={Boolean( openEditModal) }
       >
-        <EditFarm
-          yesNoDropdown={props.yesNoDropdown}
-          onTableRefresh = {props.tableRefresh}
-          selectedFarm={selectedFarm}
-          setEditPopupModal={setEditPopup}
-        ></EditFarm>
+        <EditFarmWithRef
+            yesNoDropdown={props.yesNoDropdown}
+            onTableRefresh = {props.tableRefresh}
+            selectedFarm={selectedFarm}
+            setEditPopupModal={setEditPopup}
+        ></EditFarmWithRef>
       </Modal>
 
       {/* <Modal

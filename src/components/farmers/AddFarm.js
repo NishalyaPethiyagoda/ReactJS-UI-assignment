@@ -55,7 +55,7 @@ function AddFarm(props) {
                 open = {openAddFarmModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                autocomplete="off"
+                autoComplete="off"
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title">

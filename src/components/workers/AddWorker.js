@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { MenuItem, TextField } from '@mui/material';
-import  { useEffect, useState } from 'react'
+import  { useState } from 'react'
 import axios from 'axios';
 import { Grid } from '@mui/material';
 // import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -34,13 +34,10 @@ function AddWorker(props) {
 
  
     const [newWorker, setWorker] = useState(null);
-    
-    const [ postAlert , setpostAlert] = useState(null);
 
     const handleFormSubmit = ()=>{
         axios.post('http://localhost:12759/api/Worker', newWorker)
         .then(response => {
-            setpostAlert(response.data);
             console.log(response.data);
             props.onAddWorker();
 
@@ -63,7 +60,7 @@ function AddWorker(props) {
                 open={open}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                autocomplete="off"
+                autoComplete="off"
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
