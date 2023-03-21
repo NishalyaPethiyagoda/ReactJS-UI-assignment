@@ -52,7 +52,7 @@ function AddFarm(props) {
                 Add Farm
             </Button>
             <Modal
-                open = {openAddFarmModal}
+                open = {Boolean(openAddFarmModal)}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 autoComplete="off"

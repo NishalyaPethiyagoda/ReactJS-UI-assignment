@@ -3,7 +3,6 @@ import  Modal  from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { color } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -31,8 +30,8 @@ function ConfirmationPopup( {
     return (
         <div>
             <Modal
-                open={openPopupModal}
-                onClose={closePopupModal}
+                open={Boolean(openPopupModal)}
+                //onClose={closePopupModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 >

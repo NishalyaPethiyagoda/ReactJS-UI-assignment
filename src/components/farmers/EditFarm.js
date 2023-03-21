@@ -43,7 +43,7 @@ function EditFarm( props ) {
     return (
         <div>
             <Modal
-                open = {props.setEditPopupModal}
+                open = {Boolean(props.setEditPopupModal)}
 
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"

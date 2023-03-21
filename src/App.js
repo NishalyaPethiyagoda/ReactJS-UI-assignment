@@ -19,8 +19,8 @@ function App() {
         </div>
 
         <Routes>
-
-          <Route path="/" element={<Farms />} />
+          <Route path='/' element= { <Farms /> }></Route>
+          <Route path="/farms" element={<Farms />} />
           <Route path="/workers" element={<Workers />} />
             
           {/* <Route path="*" element={<h1>Error 404: Page Not found</h1>} /> */}
