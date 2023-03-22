@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 
 function AssignedWorkersTable(props) {
@@ -22,6 +22,7 @@ function AssignedWorkersTable(props) {
                 <TableCell align="left">Age</TableCell>
                 <TableCell align="left">Worker certified Until</TableCell>
                 <TableCell align="left" sx={{padding:2}}>Designation</TableCell>
+                <TableCell align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -46,13 +47,24 @@ function AssignedWorkersTable(props) {
                       <TableCell align="left">{worker.age}</TableCell>
                       <TableCell align="left">{worker.certifiedDate}</TableCell>
                       <TableCell align="left" sx={{padding:2}}>{worker.designation}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant='contained'
+                          onClick={() => {
+                            //props.setDeletingworkerId(worker.workerId);
+                            props.deleteWorkerAssignment(worker.workerId);
+                          }}
+                          sx = {{minWidth: 100}}
+                        >
+                            Deallocate
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   )
                 }
                 
               })}
             </TableBody>
-          {console.log(assignedWorkers[0])}
           </Table>
         </TableContainer>
       );
