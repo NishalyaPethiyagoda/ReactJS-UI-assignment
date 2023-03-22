@@ -1,6 +1,7 @@
 import { Modal, Box , Button} from '@mui/material'
 import Typography from '@mui/material/Typography'
-import React from 'react'
+import React, { useState } from 'react'
+import AssignNewWorker from '../assignWorker/AssignNewWorker';
 
 const style = {
     position: 'absolute',
@@ -18,6 +19,11 @@ const style = {
   };
 
 function AssignedWorkers(props) {
+
+    const [openModal, setModal] = useState(false);
+    const openAssignedWorkersModal = () => setModal(true);
+    const closeAssignNewWorkerModal = () => setModal(false);
+
     return (
         <div>
             <Modal
@@ -31,13 +37,12 @@ function AssignedWorkers(props) {
                     <Typography id="modal-modal-title">
                         Assigned Workers to this Farm
                     </Typography>
-                    <Button
-                        variant='contained'
-                        onClick={() => props.closeFarmWorkersModal()}
-                        sx = {{margin: 3, minWidth: 100}}
+                    
+                    <AssignNewWorker 
+                        farmId = {props.selectedFarmId}
                     >
-                        Assign Workers
-                    </Button>
+                        {/* {console.log(props.farmId)} */}
+                    </AssignNewWorker>
                     <Button
                         variant='contained'
                         onClick={() => props.closeFarmWorkersModal()}
