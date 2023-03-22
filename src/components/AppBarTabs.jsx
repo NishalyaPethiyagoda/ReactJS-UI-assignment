@@ -38,7 +38,8 @@ function ResponsiveAppBar() {
             
               <Button 
                   onClick={()=> {navigate('/farms')}} 
-                  sx={{ 
+                  sx={{
+                    marginLeft: 1, 
                     my: 2, 
                     color: 'white', 
                     fontWeight:500,
@@ -51,7 +52,9 @@ function ResponsiveAppBar() {
 
               <Button 
                   onClick={()=> {navigate('/workers')}} 
-                  sx={{ my: 2, 
+                  sx={{ 
+                        marginLeft: 1,
+                        my: 2, 
                         color: 'white', 
                         fontWeight:500,
                         display: 'block',

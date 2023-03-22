@@ -13,6 +13,7 @@ import axios from 'axios';
 import {useState} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import EditFarm from '../components/farmers/EditFarm';
+import AssignedWorkers from '../components/assignedWorkers/AssignedWorkers';
 
 
 
@@ -43,6 +44,10 @@ export default function FarmersTable(props) {
     setDeletePopupModal(false);
   }
 
+  const ConfirmationPopupWithRef = React.forwardRef( (props, ref) => {
+    return <ConfirmationPopup {...props} ref={ref} />
+  })
+
   // edit functions
 
   const [selectedFarm, setSelectedFarm] = useState(null);
@@ -57,8 +62,20 @@ export default function FarmersTable(props) {
     return <EditFarm {...props} ref={ref} />
   })
 
-  const ConfirmationPopupWithRef = React.forwardRef( (props, ref) => {
-    return <ConfirmationPopup {...props} ref={ref} />
+  //assigned workers
+  
+  const [openFarmWorkersModal, setFarmWorkersModal] = useState(false);
+  const [assignedFarmId, setAssignedFarm] = useState(null);
+
+  const handleWorkersClick = (farm) => {
+    setAssignedFarm(farm.id);
+    setFarmWorkersModal(true);
+  }
+  const handleOpenAssignedWorkers = () => setFarmWorkersModal(true);
+  const handleCloseAssignedWorkers = () => setFarmWorkersModal(false);
+
+  const AssignedWorkersWithRef = React.forwardRef( (props, ref) => {
+    return <AssignedWorkers {...props} ref={ref} />
   })
 
   return (
@@ -98,7 +115,7 @@ export default function FarmersTable(props) {
                   <TableCell align="left">
                     <Button
                       variant="contained" 
-                      onClick={null}
+                      onClick={() => handleWorkersClick(farm)}
                     >
                       Workers
                     </Button>
@@ -127,7 +144,19 @@ export default function FarmersTable(props) {
           }
         </TableBody>
       </Table>
-      
+
+      <Modal
+        open = {Boolean(openFarmWorkersModal)}
+      >
+          <AssignedWorkersWithRef 
+            
+            selectedFarmId = {assignedFarmId}
+            openFarmWorkersModal = {handleOpenAssignedWorkers}
+            closeFarmWorkersModal = {handleCloseAssignedWorkers}
+            
+          />
+      </Modal>
+
       <Modal
         open = {Boolean(openDeleteModal)}
       >

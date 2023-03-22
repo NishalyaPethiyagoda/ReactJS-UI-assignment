@@ -70,7 +70,7 @@ export default function WorkersTable(props) {
           <TableHead>
             <TableRow>
             {/* <TableCell align="left">Worker ID</TableCell> */}
-            <TableCell align="left"> Name</TableCell>
+            <TableCell align="left" sx={{paddingLeft: 3}}> Name</TableCell>
             <TableCell align="left">Age</TableCell>
             <TableCell align="left">Email</TableCell>
             <TableCell align="left">Certified Until</TableCell>
@@ -88,7 +88,7 @@ export default function WorkersTable(props) {
                     {/* <TableCell align='left'>
                       {worker.Id}  
                     </TableCell> */}
-                    <TableCell align='left' component="th" scope="row">
+                    <TableCell align='left' component="th" scope="row" sx={{paddingLeft: 3}}>
                       {worker.name}  
                     </TableCell>
                     <TableCell align='left'>
