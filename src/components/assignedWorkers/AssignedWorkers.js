@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import AssignNewWorker from '../assignWorker/AssignNewWorker';
-import AssignedWorkersTable from 'D:/work/havbruksloggen/reactJS/assignment/src/dataTables/AssignedWorkersTable';
+import AssignedWorkersTable from '../../dataTables/AssignedWorkersTable';
 
 const style = {
     position: 'absolute',
@@ -29,6 +29,7 @@ function AssignedWorkers(props) {
     const selectedFarmId = props.selectedFarmId;
 
     const [assignedWorkers, setWorkers] = useState([]);
+    
 
     useEffect( () => {
         axios.get(`http://localhost:12759/api/FarmWorker/${selectedFarmId}`)

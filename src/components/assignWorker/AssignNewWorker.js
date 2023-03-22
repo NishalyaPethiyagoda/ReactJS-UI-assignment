@@ -1,15 +1,18 @@
-import { FlashOnRounded } from '@mui/icons-material';
+import { Filter, FlashOnRounded } from '@mui/icons-material';
 import { Typography} from '@mui/material'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react'
 import {Button, Modal , Box } from '@mui/material';
+import axios from 'axios';
+import { Container } from '@mui/system';
+import UnAssignedWorkersTable from '../../dataTables/UnAssignedWorkers';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: '70%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -25,15 +28,22 @@ function AssignNewWorker(props) {
     const closeAssignNewWorkerModal = () => setModal(false);
 
     const assignedWorkers = props.assignedWorkers;
-    const [assignedWorkersIds, setAssignedWorkerIds] = useState([]);
+    const [workersList, setWorkersList] = useState([]);
 
+    const [unAssigneWorkersTableKey, setUnAssigneWorkersTableKey] = useState();
+    const handleTableRefresh = () => setUnAssigneWorkersTableKey(unAssigneWorkersTableKey+1);
 
-    const filterAssignedWorkersToFarm = () => {
+    useEffect(() => {
+        axios.get('http://localhost:12759/api/Worker')
+            .then(response => {
+                console.log(response.data);
+                setWorkersList(response.data);
+            })
+    }, [unAssigneWorkersTableKey]);
 
-        assignedWorkers.forEach(worker => {
-            setAssignedWorkerIds(worker.id)
-        });
-    }
+    const unAssignedWorkers = workersList.filter((worker) => !assignedWorkers.some((assignedWorker) => assignedWorker.workerId === worker.id));  
+
+     
 
     return (
         <React.Fragment>
@@ -51,15 +61,22 @@ function AssignNewWorker(props) {
                 autoComplete="off"
             >
                 <Box sx={style}>
-                    <Typography>
-                        Assign more workers
-                    </Typography>
-                    <Typography>
-                        `farm id = {props.farmId}`
-                    </Typography>
+                    <Container sx={{marginLeft: 1 , marginTop: 3}}>
+                        <Typography>
+                            Assign more workers
+                        </Typography>
+                    </Container>
+                    <Container sx={{marginTop: 3}}>
+                        <UnAssignedWorkersTable
+                            unAssignedWorkers={unAssignedWorkers}
+                        />
+                    </Container>
                     <Button
                         variant='contained'
-                        onClick={() => closeAssignNewWorkerModal()}
+                        onClick={() => {
+                            // console.log(unAssignedWorkers);
+                            closeAssignNewWorkerModal();
+                        }}
                         sx = {{margin: 3, minWidth: 100}}
                     >
                         
