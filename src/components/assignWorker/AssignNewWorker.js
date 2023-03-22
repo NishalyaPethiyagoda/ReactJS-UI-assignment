@@ -23,6 +23,18 @@ function AssignNewWorker(props) {
     const [openModal, setModal] = useState(false);
     const openAssignNewWorkerModal = () => setModal(true);
     const closeAssignNewWorkerModal = () => setModal(false);
+
+    const assignedWorkers = props.assignedWorkers;
+    const [assignedWorkersIds, setAssignedWorkerIds] = useState([]);
+
+
+    const filterAssignedWorkersToFarm = () => {
+
+        assignedWorkers.forEach(worker => {
+            setAssignedWorkerIds(worker.id)
+        });
+    }
+
     return (
         <React.Fragment>
             <Button
