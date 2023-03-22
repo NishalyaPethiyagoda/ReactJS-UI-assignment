@@ -1,7 +1,9 @@
-import { Modal, Box , Button} from '@mui/material'
+import { Modal, Box , Button, Container} from '@mui/material'
 import Typography from '@mui/material/Typography'
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import AssignNewWorker from '../assignWorker/AssignNewWorker';
+import AssignedWorkersTable from 'D:/work/havbruksloggen/reactJS/assignment/src/dataTables/AssignedWorkersTable';
 
 const style = {
     position: 'absolute',
@@ -11,7 +13,7 @@ const style = {
     width: '70%',
     innerHeight: '70%',
     outerHeight: '75%',
-    minWidth: '300px',
+    minWidth: '400px',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -20,9 +22,37 @@ const style = {
 
 function AssignedWorkers(props) {
 
-    const [openModal, setModal] = useState(false);
-    const openAssignedWorkersModal = () => setModal(true);
-    const closeAssignNewWorkerModal = () => setModal(false);
+    // const [openModal, setModal] = useState(false);
+    // const openAssignedWorkersModal = () => setModal(true);
+    // const closeAssignNewWorkerModal = () => setModal(false);
+    const [assignedWorkerTableKey, setAssigneWorkerstableKey] = useState(0); 
+    const selectedFarmId = props.selectedFarmId;
+
+    const [workers, setWorkers] = useState([]);
+    const [assignedWorkers, setAssignedWorkers] = useState([]);
+
+    useEffect(() => {
+        //console.log('Workers:', workers);
+      }, [workers]);
+
+    useEffect( () => {
+        axios.get(`http://localhost:12759/api/FarmWorker/${selectedFarmId}`)
+            .then(response => {
+                setWorkers(response.data);
+                // console.log(response.data);
+                // console.log(workers);
+            });
+    }, [assignedWorkerTableKey]);
+
+    const getWorkersToFarm = () => {
+
+        
+    }
+    const filterAssignedWorkersToFarm = () => {
+
+        getWorkersToFarm();
+    }
+
 
     return (
         <div>
@@ -34,15 +64,24 @@ function AssignedWorkers(props) {
                 autoComplete="off"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title">
-                        Assigned Workers to this Farm
+                    <Typography id="modal-modal-title" sx = {{marginBottom: 5 , marginLeft:1}}>
+                         Workers Assigned to Farm : {selectedFarmId} 
                     </Typography>
+
+                    <Container align="right" >
+                        <AssignNewWorker 
+                            farmId = {props.selectedFarmId}
+                        >
+                            {/* {console.log(props.farmId)} */}
+                        </AssignNewWorker>
+                    </Container>
                     
-                    <AssignNewWorker 
-                        farmId = {props.selectedFarmId}
+                    <AssignedWorkersTable
+                        assignedWorkers= {workers}
+                        
                     >
-                        {/* {console.log(props.farmId)} */}
-                    </AssignNewWorker>
+                    </AssignedWorkersTable>
+
                     <Button
                         variant='contained'
                         onClick={() => props.closeFarmWorkersModal()}

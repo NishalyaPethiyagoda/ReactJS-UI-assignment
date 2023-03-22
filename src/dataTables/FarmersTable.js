@@ -149,6 +149,7 @@ export default function FarmersTable(props) {
         open = {Boolean(openFarmWorkersModal)}
       >
           <AssignedWorkersWithRef 
+            
             selectedFarmId = {assignedFarmId}
             openFarmWorkersModal = {handleOpenAssignedWorkers}
             closeFarmWorkersModal = {handleCloseAssignedWorkers}
