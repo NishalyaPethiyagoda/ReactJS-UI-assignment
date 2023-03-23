@@ -30,7 +30,6 @@ function AssignNewWorker(props) {
     const closeAssignNewWorkerModal = () => {
         
         setModal(false);
-        props.handleAssignedFarmWorkerTableRefresh();
     }
 
     //getting all workers and filtering out assigened workers
@@ -81,6 +80,7 @@ function AssignNewWorker(props) {
                             selectedFarm = {props.farmId}
                             //assignedWorkers = {props.assignedWorkers}
                             unAssignedWorkers={unAssignedWorkers}
+                            handleAssignedFarmWorkerTableRefresh ={props.handleAssignedFarmWorkerTableRefresh}
                         />
                     </Container>
                     <Button
