@@ -26,14 +26,9 @@ function AssignNewWorker(props) {
 
     const [openModal, setModal] = useState(false);
     const openAssignNewWorkerModal = () => setModal(true);
-
-    const closeAssignNewWorkerModal = () => {
-        
-        setModal(false);
-    }
+    const closeAssignNewWorkerModal = () => setModal(false);
 
     //getting all workers and filtering out assigened workers
-    const assignedWorkers = props.assignedWorkers;
     const [workersList, setWorkersList] = useState([]);
 
     useEffect(() => {
@@ -43,13 +38,22 @@ function AssignNewWorker(props) {
             })
     }, []);
 
-    // filtering for unassigned workers
+    const assignedWorkers = props.assignedWorkers;
+
     const [unAssignedWorkers, setUnAssignedWorkers] = useState([]);
 
+    // filtering for unassigned workers
     const filterFuntion = () => {
-        const temporaryUnAssignedWorkerList = workersList.filter((worker) => !assignedWorkers.some( (assignedWorker)=> assignedWorker.workerId===worker.id) );
-        setUnAssignedWorkers(temporaryUnAssignedWorkerList);
+        props.getAssignedFarmWorkers();
+
+        const unAssignedWorkerList = workersList.filter((worker) => !assignedWorkers.some( (assignedWorker)=> assignedWorker.workerId===worker.id) );
+        
+        setUnAssignedWorkers(unAssignedWorkerList);
     }
+
+    useEffect( () => {
+        filterFuntion();
+    }, []);
 
     return (
         <React.Fragment>
@@ -78,19 +82,14 @@ function AssignNewWorker(props) {
                     <Container sx={{marginTop: 3}}>
                         <UnAssignedWorkersTable
                             selectedFarm = {props.farmId}
-                            //assignedWorkers = {props.assignedWorkers}
                             unAssignedWorkers={unAssignedWorkers}
-                            handleAssignedFarmWorkerTableRefresh ={props.handleAssignedFarmWorkerTableRefresh}
+                            handleUnAssignedWorkerTableRefresh = {filterFuntion}
                         />
                     </Container>
                     <Button
                         variant='contained'
                         sx = {{margin: 3, minWidth: 100}}
-                        onClick={() => { 
-                            
-                            closeAssignNewWorkerModal();  
-                            
-                        }}
+                        onClick={() => { closeAssignNewWorkerModal();  }}
                     >
                         Close
                     </Button>
