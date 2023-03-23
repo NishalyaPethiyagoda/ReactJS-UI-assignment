@@ -1,11 +1,12 @@
-import { Filter, FlashOnRounded } from '@mui/icons-material';
+
 import { Typography} from '@mui/material'
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import React from 'react'
 import {Button, Modal , Box } from '@mui/material';
-import axios from 'axios';
 import { Container } from '@mui/system';
-import UnAssignedWorkersTable from '../../dataTables/UnAssignedWorkers';
+import axios from 'axios';
+import {  useEffect } from 'react';
+import UnAssignedWorkersTable from '../../dataTables/UnAssignedWorkersTable';
 
 const style = {
     position: 'absolute',
@@ -25,31 +26,40 @@ function AssignNewWorker(props) {
 
     const [openModal, setModal] = useState(false);
     const openAssignNewWorkerModal = () => setModal(true);
-    const closeAssignNewWorkerModal = () => setModal(false);
 
+    const closeAssignNewWorkerModal = () => {
+        
+        setModal(false);
+        props.handleAssignedFarmWorkerTableRefresh();
+    }
+
+    //getting all workers and filtering out assigened workers
     const assignedWorkers = props.assignedWorkers;
     const [workersList, setWorkersList] = useState([]);
-
-    const [unAssigneWorkersTableKey, setUnAssigneWorkersTableKey] = useState();
-    const handleTableRefresh = () => setUnAssigneWorkersTableKey(unAssigneWorkersTableKey+1);
 
     useEffect(() => {
         axios.get('http://localhost:12759/api/Worker')
             .then(response => {
-                console.log(response.data);
                 setWorkersList(response.data);
             })
-    }, [unAssigneWorkersTableKey]);
+    }, []);
 
-    const unAssignedWorkers = workersList.filter((worker) => !assignedWorkers.some((assignedWorker) => assignedWorker.workerId === worker.id));  
+    // filtering for unassigned workers
+    const [unAssignedWorkers, setUnAssignedWorkers] = useState([]);
 
-     
+    const filterFuntion = () => {
+        const temporaryUnAssignedWorkerList = workersList.filter((worker) => !assignedWorkers.some( (assignedWorker)=> assignedWorker.workerId===worker.id) );
+        setUnAssignedWorkers(temporaryUnAssignedWorkerList);
+    }
 
     return (
         <React.Fragment>
             <Button
                 variant='contained'
-                onClick={() => openAssignNewWorkerModal()}
+                onClick={() => {
+                    openAssignNewWorkerModal();
+                    filterFuntion();
+                }}
                 sx = {{margin: 3, minWidth: 100}}
             >
                 Assign New Workers
@@ -68,18 +78,20 @@ function AssignNewWorker(props) {
                     </Container>
                     <Container sx={{marginTop: 3}}>
                         <UnAssignedWorkersTable
+                            selectedFarm = {props.farmId}
+                            //assignedWorkers = {props.assignedWorkers}
                             unAssignedWorkers={unAssignedWorkers}
                         />
                     </Container>
                     <Button
                         variant='contained'
-                        onClick={() => {
-                            // console.log(unAssignedWorkers);
-                            closeAssignNewWorkerModal();
-                        }}
                         sx = {{margin: 3, minWidth: 100}}
+                        onClick={() => { 
+                            
+                            closeAssignNewWorkerModal();  
+                            
+                        }}
                     >
-                        
                         Close
                     </Button>
                 </Box>

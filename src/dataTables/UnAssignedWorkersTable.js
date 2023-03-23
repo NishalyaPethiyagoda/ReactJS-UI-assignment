@@ -8,10 +8,21 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button, Typography } from '@mui/material';
 import { Container } from '@mui/system';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 function UnAssignedWorkersTable(props) {
 
-  const unAssignedWorkers = props.unAssignedWorkers;
+    const unAssignedWorkers = props.unAssignedWorkers;
+
+    //allocate worker table functions
+    const handleAssignWorker = (workerId ) => {
+      axios.post(`http://localhost:12759/api/FarmWorker/${props.selectedFarm}/${workerId}`)
+      .then(response => {
+          console.log(response.data);
+          props.handleAssignedFarmWorkerTableRefresh();
+      })
+  }
 
     return (
         <TableContainer component={Paper}>
@@ -51,9 +62,10 @@ function UnAssignedWorkersTable(props) {
                         <Button
                           variant='contained'
                           onClick={() => {
-                            //props.setDeletingworkerId(worker.workerId);
-                            //props.deleteWorkerAssignment(worker.workerId);
-                            {console.log(unAssignedWorkers)}
+                            handleAssignWorker(worker.id);
+                            
+                            //handleTableRefresh();
+                            //{console.log(unAssignedWorkers)}
                           }}
                           sx = {{minWidth: 100}}
                         >
