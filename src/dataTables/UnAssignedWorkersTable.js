@@ -9,11 +9,10 @@ import Paper from '@mui/material/Paper';
 import { Button, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import axios from 'axios';
-import { useState } from 'react';
 
 function UnAssignedWorkersTable(props) {
 
-  const [unAssignedWorkers, setUnAssigedWorkers] = useState(props.unAssignedWorkers);
+  const unAssignedWorkers = props.unAssignedWorkers;
 
   //allocate worker table functions
   const handleAssignWorker = (workerId ) => {
@@ -21,9 +20,7 @@ function UnAssignedWorkersTable(props) {
     axios.post(`http://localhost:12759/api/FarmWorker/${props.selectedFarm}/${workerId}`)
       .then(response => {
           console.log(response.data);
-          
           props.handleUnAssignedWorkerTableRefresh();
-          setUnAssigedWorkers();
     });
   }
 
