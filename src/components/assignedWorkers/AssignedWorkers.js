@@ -40,13 +40,12 @@ function AssignedWorkers(props) {
         setAssigneWorkerstableKey(assignedFarmWorkerTableKey+1);
     }
 
-    
     const deleteWorkerAssignment = (workerId) => {
         axios.delete(`http://localhost:12759/api/FarmWorker/${selectedFarmId}/${workerId}`)
             .then(response => {
                 console.log(response.data);
                 handleAssignedFarmWorkerTableRefresh();
-            })
+            });
     }
 
     return (
@@ -67,7 +66,7 @@ function AssignedWorkers(props) {
                         <AssignNewWorker 
                             farmId = {props.selectedFarmId}
                             assignedWorkers= {assignedWorkers}
-                            //handleAssignedFarmWorkerTableRefresh = {handleAssignedFarmWorkerTableRefresh(workerId)}
+                            handleAssignedFarmWorkerTableRefresh = {handleAssignedFarmWorkerTableRefresh}
                         />
                     </Container>
                     
