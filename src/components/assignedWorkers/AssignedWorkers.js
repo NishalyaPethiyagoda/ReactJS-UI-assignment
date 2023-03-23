@@ -22,31 +22,30 @@ const style = {
 
 function AssignedWorkers(props) {
 
-    // const [openModal, setModal] = useState(false);
-    // const openAssignedWorkersModal = () => setModal(true);
-    // const closeAssignNewWorkerModal = () => setModal(false);
-    const [assignedWorkerTableKey, setAssigneWorkerstableKey] = useState(0); 
+    
     const selectedFarmId = props.selectedFarmId;
 
     const [assignedWorkers, setWorkers] = useState([]);
-    
+    const [newAllocatedWorkers, setNewAllocatedWorkers ]= useState(null);
 
+    const [assignedFarmWorkerTableKey, setAssigneWorkerstableKey] = useState(0); 
     useEffect( () => {
         axios.get(`http://localhost:12759/api/FarmWorker/${selectedFarmId}`)
             .then(response => {
                 setWorkers(response.data);
             });
-    }, [assignedWorkerTableKey]);
+    }, [assignedFarmWorkerTableKey]);
 
-    const handleTableRefresh = () => {
-        setAssigneWorkerstableKey(assignedWorkerTableKey+1);
+    const handleAssignedFarmWorkerTableRefresh = () => {
+        setAssigneWorkerstableKey(assignedFarmWorkerTableKey+1);
     }
+
     
     const deleteWorkerAssignment = (workerId) => {
         axios.delete(`http://localhost:12759/api/FarmWorker/${selectedFarmId}/${workerId}`)
             .then(response => {
                 console.log(response.data);
-                handleTableRefresh();
+                handleAssignedFarmWorkerTableRefresh();
             })
     }
 
@@ -68,15 +67,12 @@ function AssignedWorkers(props) {
                         <AssignNewWorker 
                             farmId = {props.selectedFarmId}
                             assignedWorkers= {assignedWorkers}
-                            tableRefresh = {handleTableRefresh}
-                        >
-                            {/* {console.log(props.farmId)} */}
-                        </AssignNewWorker>
+                            //handleAssignedFarmWorkerTableRefresh = {handleAssignedFarmWorkerTableRefresh(workerId)}
+                        />
                     </Container>
                     
                     <AssignedWorkersTable
                         assignedWorkers= {assignedWorkers}
-                        //setDeletingworkerId = {handleDeletingWorkerId}
                         deleteWorkerAssignment = {deleteWorkerAssignment}
                     >
                     </AssignedWorkersTable>
