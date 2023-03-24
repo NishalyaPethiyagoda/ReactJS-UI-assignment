@@ -42,7 +42,6 @@ function AddFarm(props) {
         });
     }
 
-
     return (
         <div>
             <Button
