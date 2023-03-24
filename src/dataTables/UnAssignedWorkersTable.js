@@ -12,15 +12,19 @@ import axios from 'axios';
 
 function UnAssignedWorkersTable(props) {
 
-  const unAssignedWorkers = props.unAssignedWorkers;
+  const [unAssignedWorkers, setUnAssignedWorkers] = React.useState(props.unAssignedWorkers);
 
   //allocate worker table functions
   const handleAssignWorker = (workerId ) => {
 
     axios.post(`http://localhost:12759/api/FarmWorker/${props.selectedFarm}/${workerId}`)
       .then(response => {
+        const updatedUnAssignedWorkers = unAssignedWorkers.filter(worker => worker.id !== workerId);
+        //props.setUnAssignedWorkers(updatedUnAssignedWorkers);
+        setUnAssignedWorkers(updatedUnAssignedWorkers);
+
           console.log(response.data);
-          props.handleUnAssignedWorkerTableRefresh();
+        props.handleUnAssignedWorkerTableRefresh();
     });
   }
 
@@ -63,7 +67,6 @@ function UnAssignedWorkersTable(props) {
                         variant='contained'
                         onClick={() => { 
                           handleAssignWorker(worker.id);
-                          
                           //handleTableRefresh();
                           //{console.log(unAssignedWorkers)}
                         }}

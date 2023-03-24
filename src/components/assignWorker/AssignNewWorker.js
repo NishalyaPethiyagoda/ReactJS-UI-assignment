@@ -44,6 +44,7 @@ function AssignNewWorker(props) {
 
     // filtering for unassigned workers
     const filterFuntion = () => {
+
         props.getAssignedFarmWorkers();
 
         const unAssignedWorkerList = workersList.filter((worker) => !assignedWorkers.some( (assignedWorker)=> assignedWorker.workerId===worker.id) );
@@ -83,6 +84,7 @@ function AssignNewWorker(props) {
                         <UnAssignedWorkersTable
                             selectedFarm = {props.farmId}
                             unAssignedWorkers={unAssignedWorkers}
+                            setUnAssignedWorkers ={setUnAssignedWorkers}
                             handleUnAssignedWorkerTableRefresh = {filterFuntion}
                         />
                     </Container>
