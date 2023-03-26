@@ -129,7 +129,6 @@ function AddFarm(props) {
                         Close
                     </Button>
                 </Box>
-
             </Modal>
         </div>
     )
