@@ -78,7 +78,6 @@ function UnAssignedWorkersTable(props) {
                   </TableRow>
                 )
               }
-              
             })}
           </TableBody>
         </Table>

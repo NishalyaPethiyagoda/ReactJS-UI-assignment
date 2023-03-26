@@ -5,6 +5,7 @@ import  Typography  from '@mui/material/Typography';
 import { MenuItem, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import {z} from "zod";
 
 const style = {
     position: 'absolute',
@@ -13,7 +14,6 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: '20%',
     minWidth: '300px',
-    
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -24,16 +24,42 @@ function EditFarm( props ) {
 
     const [farm, setSelectedFarm] = useState(props.selectedFarm);
 
+    const validationSchema = z.object({
+        name: z.string().min(4).max(50),
+        latitude: z.number().min(-90).max(90),
+        longitude: z.number().min(-180).max(180),
+        noOfCages: z.number().int().positive().max(200),
+        hasBarge: z.boolean(),
+    });
+
+    const [nameError, setNameError] = useState('');
+    const [latitudeError, setLatitudeError] = useState('');
+    const [longitudeError, setLongitudeError] = useState('');
+    const [noOfCagesError , setNoOfCagesError] = useState('');
+    const [hasBargeError , setHasBargeError] = useState('');
+
+
     const handleSubmit = (farm) => {
-        axios.put(`http://localhost:12759/api/Farm/${farm.id}`, farm)
+        
+        const isInvalidSubmit = validationSchema.safeParse(farm);
+
+        if(!isInvalidSubmit.success){
+            isInvalidSubmit.error.format().name? setNameError( isInvalidSubmit.error.format().name._errors[0] ): setNameError('');
+            isInvalidSubmit.error.format().latitude? setLatitudeError( isInvalidSubmit.error.format().latitude._errors[0]): setLatitudeError('');
+            isInvalidSubmit.error.format().longitude? setLongitudeError( isInvalidSubmit.error.format().longitude._errors[0]): setLongitudeError('');
+            isInvalidSubmit.error.format().noOfCages? setNoOfCagesError( isInvalidSubmit.error.format().noOfCages._errors[0]): setNoOfCagesError('');
+            isInvalidSubmit.error.format().hasBargeError? setHasBargeError( isInvalidSubmit.error.format().hasBargeError._errors[0]): setHasBargeError('');
+        }
+        else{
+
+            axios.put(`http://localhost:12759/api/Farm/${farm.id}`, farm)
             .then(response => {
                     console.log(response.data)
                     props.onTableRefresh();
-                }
-                    
+                }      
             );
-        props.setEditPopupModal(false);
-            
+            props.setEditPopupModal(false);
+        }   
     }
 
     const handleCloseModal = () => {
@@ -54,50 +80,64 @@ function EditFarm( props ) {
                         Edit Farm
                     </Typography>
                     <TextField
+                        error = {nameError!=='' ? true : false}
                         id='outlined-basic'
+                        required= {true}
                         label="Name"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.name}
                         onChange={(e) => setSelectedFarm({...farm, name: e.target.value})}
                         autoComplete= "off"
+                        helperText = {nameError}
                     />
                     <TextField
+                        error = {latitudeError!==''? true : false}
                         id='outlined-basic'
+                        required={true}
                         label="Lattitude"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.latitude}
-                        onChange={(e) => setSelectedFarm({...farm, latitude: e.target.value})}
+                        onChange={(e) => setSelectedFarm({...farm, latitude: parseFloat(e.target.value)})}
                         autoComplete= "off"
+                        helperText = {latitudeError}
                     />
                     <TextField
+                        error = {longitudeError!=='' ? true : false}
                         id='outlined-basic'
+                        required = {true}
                         label="Longitude"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.longitude}
-                        onChange={(e) => setSelectedFarm({...farm, longitude: e.target.value})}
+                        onChange={(e) => setSelectedFarm({...farm, longitude: parseFloat(e.target.value)})}
                         autoComplete= "off"
+                        helperText = {longitudeError}
                     />
                     <TextField
+                        error = {noOfCagesError!==''? true : false}
                         id='outlined-basic'
                         label="Number of Cages"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.noOfCages}
-                        onChange={(e) => setSelectedFarm({...farm, noOfCages: e.target.value})}
+                        onChange={(e) => setSelectedFarm({...farm, noOfCages: parseInt(e.target.value)})}
                         autoComplete= "off"
+                        helperText = {noOfCagesError}
                     />
                     <TextField
                         select
+                        error = {hasBargeError!=='' ? true: false}
                         id='outlined-basic'
+                        required = {true}
                         label="Farm has a Barge?"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.hasBarge}
-                        onChange={(e) => setSelectedFarm({...farm, hasBarge: e.target.value})}
+                        onChange={(e) => setSelectedFarm({...farm, hasBarge: Boolean(e.target.value)})}
                         autoComplete= "off"
+                        helperText = {hasBargeError}
                     >
                         {props.yesNoDropdown.map( (dropDownValue) => (
                             <MenuItem key={dropDownValue.id} value ={dropDownValue.value}>
