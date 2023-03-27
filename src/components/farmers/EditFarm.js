@@ -84,6 +84,7 @@ function EditFarm( props ) {
                         id='outlined-basic'
                         required= {true}
                         label="Name"
+                        type="text"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.name}
@@ -96,6 +97,7 @@ function EditFarm( props ) {
                         id='outlined-basic'
                         required={true}
                         label="Lattitude"
+                        type="number"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.latitude}
@@ -108,6 +110,7 @@ function EditFarm( props ) {
                         id='outlined-basic'
                         required = {true}
                         label="Longitude"
+                        type="number"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.longitude}
@@ -119,6 +122,7 @@ function EditFarm( props ) {
                         error = {noOfCagesError!==''? true : false}
                         id='outlined-basic'
                         label="Number of Cages"
+                        type="number"
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.noOfCages}
