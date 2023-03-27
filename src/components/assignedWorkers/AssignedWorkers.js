@@ -22,29 +22,26 @@ const style = {
 
 function AssignedWorkers(props) {
 
-    
     const selectedFarmId = props.selectedFarmId;
 
     const [assignedWorkers, setWorkers] = useState([]);
-    const [newAllocatedWorkers, setNewAllocatedWorkers ]= useState(null);
-
-    const [assignedFarmWorkerTableKey, setAssigneWorkerstableKey] = useState(0); 
-    useEffect( () => {
+    
+    const getAssignedFarmWorkers=() => {
         axios.get(`http://localhost:12759/api/FarmWorker/${selectedFarmId}`)
             .then(response => {
                 setWorkers(response.data);
             });
-    }, [assignedFarmWorkerTableKey]);
+    };
 
-    const handleAssignedFarmWorkerTableRefresh = () => {
-        setAssigneWorkerstableKey(assignedFarmWorkerTableKey+1);
-    }
+    useEffect( () => {
+        getAssignedFarmWorkers();
+    }, []);
 
     const deleteWorkerAssignment = (workerId) => {
         axios.delete(`http://localhost:12759/api/FarmWorker/${selectedFarmId}/${workerId}`)
             .then(response => {
                 console.log(response.data);
-                handleAssignedFarmWorkerTableRefresh();
+                getAssignedFarmWorkers();
             });
     }
 
@@ -59,14 +56,14 @@ function AssignedWorkers(props) {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" sx = {{marginBottom: 5 , marginLeft:1}}>
-                         Workers Assigned to Farm : {selectedFarmId} 
+                         Workers Assigned to Farm  
                     </Typography>
 
                     <Container align="right" >
                         <AssignNewWorker 
                             farmId = {props.selectedFarmId}
                             assignedWorkers= {assignedWorkers}
-                            handleAssignedFarmWorkerTableRefresh = {handleAssignedFarmWorkerTableRefresh}
+                            getAssignedFarmWorkers ={getAssignedFarmWorkers}
                         />
                     </Container>
                     

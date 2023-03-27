@@ -50,10 +50,7 @@ function AssignedWorkersTable(props) {
                       <TableCell>
                         <Button
                           variant='contained'
-                          onClick={() => {
-                            //props.setDeletingworkerId(worker.workerId);
-                            props.deleteWorkerAssignment(worker.workerId);
-                          }}
+                          onClick={() => { props.deleteWorkerAssignment(worker.workerId); }}
                           sx = {{minWidth: 100}}
                         >
                             Deallocate
