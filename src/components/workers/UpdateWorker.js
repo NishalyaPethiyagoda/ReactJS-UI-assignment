@@ -35,15 +35,6 @@ function UpdateWorker(props ) {
         certifiedDate: new Date(props.worker.certifiedDate),
         designationId: parseInt(props.worker.designationId),
     });
-//     const [submittingWorker, setSubmittingWorker] = useState({
-//         id: editingWorker.id,
-//         name: editingWorker.name,
-//         age: editingWorker.age.to,
-//         email: editingWorker.email,
-//  //       certifiedDate: editingWorker.certifiedDate.toISOString(),
-//         certifiedDate: editingWorker.certifiedDate,
-//         designationId: editingWorker.designationId,
-//     });
   
     useEffect(()=>{
         axios.get('http://localhost:12759/api/WorkerDesignation')
@@ -56,7 +47,6 @@ function UpdateWorker(props ) {
         name: z.string().min(3).max(25),
         age: z.number().int().positive().min(18).max(60),
         email: z.string().email().min(5).max(25),
-        //certifiedDate: z.date().min( new Date()),
         designationId: z.number().min(1)
     });
 
@@ -66,10 +56,6 @@ function UpdateWorker(props ) {
     const [certifiedDateError, setCertifiedDateError] = useState('');
     const [designationIdError, setDesignationIdError] = useState('');
 
-    // const handleCertifiedDateTypeConversion = (event) => {
-    //     const certifiedDateChanged = new Date(event.target.value);
-    //     setWorker({...editingWorker, certifiedDate: certifiedDateChanged });
-    // }
 
     const updateWorkerSubmit = (editingWorker) => {
 
@@ -79,12 +65,9 @@ function UpdateWorker(props ) {
             updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
             updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
             updateResult.error.format().email? setEmailError(updateResult.error.format().email._errors[0]) : setEmailError('');
-            //updateResult.error.format().certifiedDate? setCertifiedDateError(updateResult.error.format().certifiedDate._errors[0]) : setCertifiedDateError('');
             updateResult.error.format().designationId? setDesignationIdError(updateResult.error.format().designationId._errors[0] ): setDesignationIdError('');
         }
         else{
-            //setSubmittingWorker(editingWorker);
-
             axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
                 .then( response => {
                     console.log(response.data);
@@ -172,7 +155,6 @@ function UpdateWorker(props ) {
                                 variant="outlined"
                                 type="date"
                                 defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
-                                // onChange={handleCertifiedDateTypeConversion}
                                 onChange= {(e) => setWorker({...editingWorker, certifiedDate: e.target.value})}
                                 helperText={certifiedDateError}
                                 InputLabelProps={{
@@ -212,7 +194,6 @@ function UpdateWorker(props ) {
                         sx={{margin: 3, minWidth:100}}
                     >
                         Submit
-                    {/* {console.log(worker)} */}
                     </Button>
                         
                     <Button 

@@ -31,7 +31,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            Havbruksloggen
+            Aqua-Culture
           </Typography>
 
           <Box sx={{ display: { md: 'flex' } }}>
