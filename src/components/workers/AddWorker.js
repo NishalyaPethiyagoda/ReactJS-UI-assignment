@@ -8,9 +8,7 @@ import { MenuItem, TextField } from '@mui/material';
 import  { useState } from 'react'
 import axios from 'axios';
 import { Grid } from '@mui/material';
-// import AdapterDateFns from '@mui/lab/AdapterDateFns';
-// import { LocalizationProvider } from '@mui/lab';
-// import DateTimePicker from '@mui/lab/DateTimePicker';
+import {z} from "zod";
 
 
 const style = {
@@ -31,20 +29,43 @@ function AddWorker(props) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
  
     const [newWorker, setWorker] = useState(null);
 
-    const handleFormSubmit = ()=>{
-        axios.post('http://localhost:12759/api/Worker', newWorker)
-        .then(response => {
-            console.log(response.data);
-            props.onAddWorker();
+    const validationScheme = z.object( {
+        name: z.string().min(3).max(25),
+        age: z.number().int().positive().min(18).max(60),
+        email: z.string().min(12).max(25),
+    });
 
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    const [nameError, setNameError] = useState('');
+    const [ageError, setAgeError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [certifiedDateError, setCertifiedDateError] = useState('');
+    const [designationIdError, setDesignationIdError] = useState('');
+
+    const handleFormSubmit = ()=>{
+
+        const submitResult = validationScheme.safeParse(newWorker);
+
+        if(!submitResult.success)
+        {
+            submitResult.error.format().name? setNameError(submitResult.error.format().name._error[0]) : setNameError('');
+            submitResult.error.format().email? setEmailError(submitResult.error.format().email._error[0]) : setEmailError('');
+            submitResult.error.format().age? setAgeError(submitResult.error.format().age._error[0] ): setAgeError('');
+
+        }
+        else{
+            axios.post('http://localhost:12759/api/Worker', newWorker)
+                .then(response => {
+                    console.log(response.data);
+                    props.onAddWorker();
+
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
         handleClose();
     }
 
@@ -68,41 +89,55 @@ function AddWorker(props) {
                     </Typography>
 
                     <TextField 
+                        error = { nameError!== ''? true: false}
                         id="outlined-basic" 
+                        required={true}
                         label="Name" 
+                        type="text"
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
-                        onChange={(e) => setWorker({...newWorker, Name: e.target.value})}
+                        onChange={(e) => setWorker({...newWorker, name: (e.target.value)})}
                         autocomplete="off"
+                        helperText={nameError}
                     />
 
                     <TextField 
+                        error = {ageError!== ''? true: false}
                         id="outlined-basic" 
+                        rewuired={true}
                         label="Age" 
+                        type="number"
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
+                        onChange={(e) => setWorker({...newWorker, age: parseInt(e.target.value)})}
                         autocomplete="off"
-                        onChange={(e) => setWorker({...newWorker, Age: parseInt(e.target.value)})}
+                        helperText={ageError}
                     />
 
                     <TextField 
+                        error= {emailError!==''? true : false}
                         id="outlined-basic" 
+                        required={true}
                         label="Email" 
+                        type="email"
                         sx={{minWidth: 295 , marginTop:3}} 
                         variant="outlined" 
+                        onChange={(e) => setWorker({...newWorker, email: (e.target.value)})}
                         autocomplete="off"
-                        onChange={(e) => setWorker({...newWorker, Email: e.target.value})}
+                        helperText={emailError}
                     ></TextField>
 
                     <TextField 
                         select 
+                        error = {designationIdError!==''? true: false}
                         id="outlined-select" 
                         label="Designation" 
+                        
+                        rewuired={true}
                         variant="filled"
-                        //defaultValue={positions}
-                        //defaultValue={worker.designation}
-                        onChange={(e) => setWorker({...newWorker, DesignationId: e.target.value})}
+                        onChange={(e) => setWorker({...newWorker, designationId: parseInt(e.target.value)})}
                         autocomplete="off"
+                        helperText={designationIdError}
                         sx={{minWidth: 295, marginTop:3}}
                     >
                         {props.designations.map( (designation) => (
@@ -119,12 +154,15 @@ function AddWorker(props) {
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
+                                error = {certifiedDateError!== ''? true: false}
                                 id="outlined-basic"
+                                required ={true}
                                 label="Worker Certified Until (Date)"
                                 sx={{minWidth: 295, marginTop:3}}
                                 variant="outlined"
                                 type="date"
-                                onChange={(e) => setWorker({ ...newWorker, CertifiedDate: e.target.value })}
+                                onChange={(e) => setWorker({ ...newWorker, certifiedDate: (e.target.value) })}
+                                helperText={certifiedDateError}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
