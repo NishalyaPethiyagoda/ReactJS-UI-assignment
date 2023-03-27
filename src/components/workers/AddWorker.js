@@ -28,14 +28,35 @@ function AddWorker(props) {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
- 
+
     const [newWorker, setWorker] = useState(null);
+
+    const handleClose = () => {
+
+        setNameError('');
+        setAgeError('');
+        setEmailError('');
+        setCertifiedDateError('');
+        setDesignationIdError('');
+
+        setWorker(null);
+        setOpen(false);
+
+    }
+ 
+    
+
+    const handleCertifiedDateTypeConversion = (event) => {
+        const certifiedDateChanged = new Date(event.target.value);
+        setWorker({...newWorker, certifiedDate: certifiedDateChanged });
+    }
 
     const validationScheme = z.object( {
         name: z.string().min(3).max(25),
         age: z.number().int().positive().min(18).max(60),
-        email: z.string().min(12).max(25),
+        email: z.string().email().min(5).max(25),
+        certifiedDate: z.date().min( new Date()),
+        designationId: z.number().min(1)
     });
 
     const [nameError, setNameError] = useState('');
@@ -44,29 +65,48 @@ function AddWorker(props) {
     const [certifiedDateError, setCertifiedDateError] = useState('');
     const [designationIdError, setDesignationIdError] = useState('');
 
+
     const handleFormSubmit = ()=>{
 
         const submitResult = validationScheme.safeParse(newWorker);
 
-        if(!submitResult.success)
-        {
-            submitResult.error.format().name? setNameError(submitResult.error.format().name._error[0]) : setNameError('');
-            submitResult.error.format().email? setEmailError(submitResult.error.format().email._error[0]) : setEmailError('');
-            submitResult.error.format().age? setAgeError(submitResult.error.format().age._error[0] ): setAgeError('');
-
+        const areAllFieldsEmpty = (newWorker==null) ?true: false
+        
+        
+        if(areAllFieldsEmpty){
+            setNameError('This field is required');
+            setAgeError('This field is required');
+            setEmailError('This field is required');
+            setCertifiedDateError('This field is required');
+            setDesignationIdError('This field is required');
         }
         else{
-            axios.post('http://localhost:12759/api/Worker', newWorker)
-                .then(response => {
-                    console.log(response.data);
-                    props.onAddWorker();
+            if(!submitResult.success)
+            {
+                
+                submitResult.error.format().name? setNameError(submitResult.error.format().name._errors[0]) : setNameError('');
+                submitResult.error.format().age? setAgeError(submitResult.error.format().age._errors[0] ): setAgeError('');
+                submitResult.error.format().email? setEmailError(submitResult.error.format().email._errors[0]) : setEmailError('');
+                submitResult.error.format().certifiedDate? setCertifiedDateError(submitResult.error.format().certifiedDate._errors[0]) : setCertifiedDateError('');
+                submitResult.error.format().designationId? setDesignationIdError(submitResult.error.format().designationId._errors[0] ): setDesignationIdError('');
+            }
+            else{
+                axios.post('http://localhost:12759/api/Worker', newWorker)
+                    .then(response => {
+                        console.log(response.data);
+                        props.onAddWorker();
 
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+
+                    setWorker(null);
+
+                    handleClose();
+            }
         }
-        handleClose();
+        
     }
 
     return (
@@ -96,7 +136,7 @@ function AddWorker(props) {
                         type="text"
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
-                        onChange={(e) => setWorker({...newWorker, name: (e.target.value)})}
+                        onChange={(e) => setWorker({...newWorker, name: e.target.value})}
                         autocomplete="off"
                         helperText={nameError}
                     />
@@ -122,7 +162,7 @@ function AddWorker(props) {
                         type="email"
                         sx={{minWidth: 295 , marginTop:3}} 
                         variant="outlined" 
-                        onChange={(e) => setWorker({...newWorker, email: (e.target.value)})}
+                        onChange={(e) => setWorker({...newWorker, email: e.target.value})}
                         autocomplete="off"
                         helperText={emailError}
                     ></TextField>
@@ -132,8 +172,7 @@ function AddWorker(props) {
                         error = {designationIdError!==''? true: false}
                         id="outlined-select" 
                         label="Designation" 
-                        
-                        rewuired={true}
+                        required={true}
                         variant="filled"
                         onChange={(e) => setWorker({...newWorker, designationId: parseInt(e.target.value)})}
                         autocomplete="off"
@@ -161,7 +200,7 @@ function AddWorker(props) {
                                 sx={{minWidth: 295, marginTop:3}}
                                 variant="outlined"
                                 type="date"
-                                onChange={(e) => setWorker({ ...newWorker, certifiedDate: (e.target.value) })}
+                                onChange={handleCertifiedDateTypeConversion}
                                 helperText={certifiedDateError}
                                 InputLabelProps={{
                                     shrink: true,
@@ -181,5 +220,4 @@ function AddWorker(props) {
         </div>
     )
 }
-
 export default AddWorker

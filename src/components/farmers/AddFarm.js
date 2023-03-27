@@ -31,7 +31,15 @@ function AddFarm(props) {
         {id: 2, label: "No" , value: false},
     ];
 
-    const handleClose = () => setAddFarmModal(false);
+    const handleClose = () => {
+        setAddFarmModal(false);
+        setNameError('');
+        setLatitudeError('');
+        setLongitudeError('');
+        setNoOfCagesError('');
+        setHasBargeError('');
+    }
+
     const handleAddFarmClick = () => setAddFarmModal(true);
 
     const schema = z.object({
@@ -69,12 +77,6 @@ function AddFarm(props) {
                 .then(response => {
                     console.log(response.data);
                 props.onAddFarm();
-
-                setNameError('');
-                setLatitudeError('');
-                setLongitudeError('');
-                setNoOfCagesError('');
-                setHasBargeError('');
 
                 setAddFarmModal(false);
                 });
@@ -165,7 +167,7 @@ function AddFarm(props) {
                         error={hasBargeError!==''? true: false}
                         id='outlined-basic'
                         label="Farm has a Barge?"
-                        //required={true}
+                        required={true}
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         onChange={(e) => {
@@ -191,12 +193,6 @@ function AddFarm(props) {
                         variant='contained'
                         onClick={() => {
                             handleClose();
-
-                            setNameError('');
-                            setLatitudeError('');
-                            setLongitudeError('');
-                            setNoOfCagesError('');
-                            setHasBargeError('');
                         }}
                         sx = {{margin: 3, minWidth: 100}}
                     >
