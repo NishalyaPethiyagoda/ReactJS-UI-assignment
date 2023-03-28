@@ -108,8 +108,8 @@ export default function FarmersTable(props) {
                   </TableCell>
                   {/* <TableCell align="left">{farm.id}</TableCell> */}
                   <TableCell align="left">{farm.name}</TableCell>
-                  <TableCell align="left">{parseFloat(farm.latitude.toString())}</TableCell>
-                  <TableCell align="left">{parseFloat(farm.longitude.toString())}</TableCell>
+                  <TableCell align="left">{parseFloat(farm.latitude.toString()).toFixed(4)}</TableCell>
+                  <TableCell align="left">{parseFloat(farm.longitude.toString()).toFixed(4)}</TableCell>
                   <TableCell align="left">{(farm.noOfCages)}</TableCell>
                   <TableCell align="left">{ farm.hasBarge.toString() === 'true'? "Yes": "No"}</TableCell>
                   <TableCell align="left">

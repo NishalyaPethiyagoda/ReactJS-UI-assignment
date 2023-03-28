@@ -32,7 +32,7 @@ function Farms() {
     return (
         <div>
             <Container>
-                <h1>Farms Table</h1>
+                <h1 >Farms Table</h1>
             </Container>
             <Container align="right" >
                 <AddFarm 

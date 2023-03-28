@@ -43,7 +43,7 @@ function AddFarm(props) {
     const handleAddFarmClick = () => setAddFarmModal(true);
 
     const schema = z.object({
-        name: z.string().nonempty().min(4).max(50),
+        name: z.string().nonempty().min(4).max(50).regex(/^[a-zA-Z ]*$/),
         latitude: z.number().min(-90).max(90),
         longitude: z.number().min(-180).max(180),
         noOfCages: z.number().int().positive().max(200),
@@ -77,7 +77,8 @@ function AddFarm(props) {
                 .then(response => {
                     console.log(response.data);
                 props.onAddFarm();
-
+                
+                setNewFarm(null);
                 setAddFarmModal(false);
                 });
         } 
@@ -101,7 +102,18 @@ function AddFarm(props) {
                     <Typography id="modal-modal-title">
                         Add Farm
                     </Typography>
-
+                    <img src=''></img>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        >
+                        Upload Image
+                        <input
+                            type="file"
+                            hidden
+                            accept='image/*'
+                        />
+                    </Button>
                     <TextField
                         error = {nameError!==''? true: false}
                         id='outlined-basic'
@@ -110,6 +122,7 @@ function AddFarm(props) {
                         type='text'
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
+                        //onKeyDown={}
                         onChange={(e) => {
                             setNewFarm({...newFarm, name: e.target.value});
                         }}
@@ -156,7 +169,7 @@ function AddFarm(props) {
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         onChange={(e) => {
-                            setNewFarm({...newFarm, noOfCages: parseInt(e.target.value)});
+                            setNewFarm({...newFarm, noOfCages: parseFloat(e.target.value)});
                         }}
                         autoComplete= "off"
                         helperText={noOfCagesError}
@@ -193,6 +206,7 @@ function AddFarm(props) {
                         variant='contained'
                         onClick={() => {
                             handleClose();
+                            setNewFarm(null);
                         }}
                         sx = {{margin: 3, minWidth: 100}}
                     >
