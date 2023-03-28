@@ -7,6 +7,7 @@ import { MenuItem, TextField } from '@mui/material';
 import  { useState } from 'react'
 import axios from 'axios';
 import { z } from "zod";
+import { Container } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -14,30 +15,66 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '20%',
+    height: '95%',
     minWidth: '300px',
+    
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+
+    alignItems: 'left'
   };
+
+
+const defaultFarmImageSrc = './image/defaultFishFarm.jpg'
+
+const imgContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '130px',
+  height: '130px', // Change this value as needed
+  
+};
 
 function AddFarm(props) {
 
     const [openAddFarmModal, setAddFarmModal] = useState(false);
-    const [newFarm , setNewFarm] = useState(null);
+    const [newFarm , setNewFarm] = useState({
+        imageSrc: null, 
+        imageFile: null,
+        name: null,
+        latitude: null,
+        longitude: null,
+        noOfCages: null,
+        hasBarge: null,
+    });
 
     const yesNoDropdown = [
         {id: 1, label: "Yes", value: true},
         {id: 2, label: "No" , value: false},
     ];
 
-    const handleClose = () => {
+    const handleClose = () => 
+    {
         setAddFarmModal(false);
+
         setNameError('');
         setLatitudeError('');
         setLongitudeError('');
         setNoOfCagesError('');
         setHasBargeError('');
+
+        setNewFarm({
+            imageSrc: null, 
+            imageFile: null,
+            name: null,
+            latitude: null,
+            longitude: null,
+            noOfCages: null,
+            hasBarge: null,
+        })
     }
 
     const handleAddFarmClick = () => setAddFarmModal(true);
@@ -50,7 +87,7 @@ function AddFarm(props) {
         hasBarge: z.boolean(),
     });
 
-    // const [errorResult, setErrorResult] =  useState(null);
+    const [imageError, setImageError] = useState('');
     const [nameError, setNameError] = useState('');
     const [latitudeError, setLatitudeError] = useState('');
     const [longitudeError, setLongitudeError] = useState('');
@@ -61,27 +98,50 @@ function AddFarm(props) {
 
         const result  = schema.safeParse(newFarm);
 
-        if(!result.success)
+        if(newFarm.imageFile===null)
         {
-            //console.log(result.error.format().latitude._errors)
-            //console.log(result.error.format())
-            result.error.format().name? setNameError(result.error.format().name._errors[0]) : setNameError('');
-            result.error.format().latitude? setLatitudeError(result.error.format().latitude._errors[0]) : setLatitudeError('');
-            result.error.format().longitude? setLongitudeError(result.error.format().longitude._errors[0]) : setLongitudeError('');
-            result.error.format().noOfCages? setNoOfCagesError(result.error.format().noOfCages._errors[0]): setNoOfCagesError('');
-            result.error.format().hasBarge? setHasBargeError(result.error.format().hasBarge._errors[0]): setNoOfCagesError('');
-
+            setImageError('error') ;
         }
         else{
-            axios.post('http://localhost:12759/api/Farm', newFarm )
-                .then(response => {
-                    console.log(response.data);
-                props.onAddFarm();
-                
-                setNewFarm(null);
-                setAddFarmModal(false);
-                });
-        } 
+            setImageError('');
+
+            if(!result.success)
+            {
+                result.error.format().name? setNameError(result.error.format().name._errors[0]) : setNameError('');
+                result.error.format().latitude? setLatitudeError(result.error.format().latitude._errors[0]) : setLatitudeError('');
+                result.error.format().longitude? setLongitudeError(result.error.format().longitude._errors[0]) : setLongitudeError('');
+                result.error.format().noOfCages? setNoOfCagesError(result.error.format().noOfCages._errors[0]): setNoOfCagesError('');
+                result.error.format().hasBarge? setHasBargeError(result.error.format().hasBarge._errors[0]): setNoOfCagesError('');
+
+            }
+            else{
+                axios.post('http://localhost:12759/api/Farm', newFarm )
+                    .then(response => {
+                        console.log(response.data);
+                    props.onAddFarm();
+                    
+                    handleClose();
+                    });
+            } 
+        }
+    }
+    
+    const showPreview = (event) => 
+    {
+        if(event.target.files && event.target.files[0])
+        {
+            let imageFile1 = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = x => {
+                setNewFarm({
+                    ...newFarm, 
+                    imageFile: imageFile1,
+                    imageSrc: x.target.result
+                })
+            }
+            reader.readAsDataURL(imageFile1)
+        }
     }
 
     return (
@@ -102,16 +162,29 @@ function AddFarm(props) {
                     <Typography id="modal-modal-title">
                         Add Farm
                     </Typography>
-                    <img src=''></img>
+
+                    <Container 
+                        sx={{backgroundColor: 'grey', marginTop:1, marginBottom: 1}}
+                        style={imgContainerStyle}
+                    >
+                        <img 
+                            src={newFarm.imageSrc===null? defaultFarmImageSrc: newFarm.imageSrc } 
+                            alt="Default Farm Image" 
+                            style={imgContainerStyle}>
+                        </img>
+                    </Container>
+                    
                     <Button
                         variant="contained"
                         component="label"
+                        sx={{width: '100%', height: 25, backgroundColor: imageError!=='error' ? 'red' : 'blue'}}
                         >
                         Upload Image
                         <input
                             type="file"
                             hidden
                             accept='image/*'
+                            onChange={ showPreview}
                         />
                     </Button>
                     <TextField
@@ -120,7 +193,7 @@ function AddFarm(props) {
                         required={true}
                         label="Name"
                         type='text'
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 2}}
                         variant="outlined"
                         //onKeyDown={}
                         onChange={(e) => {
@@ -136,7 +209,7 @@ function AddFarm(props) {
                         label="Lattitude"
                         type="number"
                         inputProps={{step: "any"}}
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         onChange={(e) => {
                             setNewFarm({...newFarm, latitude: parseFloat(e.target.value)});
@@ -151,7 +224,7 @@ function AddFarm(props) {
                         label="Longitude"
                         type="number"
                         inputProps={{step: "any"}}
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         onChange={(e) => {
                             setNewFarm({...newFarm, longitude: parseFloat(e.target.value)});
@@ -166,7 +239,7 @@ function AddFarm(props) {
                         label="Number of Cages"
                         type="number"
                         inputProps={{inputMode: "numeric"}}
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         onChange={(e) => {
                             setNewFarm({...newFarm, noOfCages: parseFloat(e.target.value)});
@@ -181,7 +254,7 @@ function AddFarm(props) {
                         id='outlined-basic'
                         label="Farm has a Barge?"
                         required={true}
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         onChange={(e) => {
                             setNewFarm({...newFarm, hasBarge: Boolean(e.target.value)});
@@ -197,7 +270,7 @@ function AddFarm(props) {
                     </TextField>
                     <Button
                         variant='contained'
-                        sx = {{margin: 3, minWidth: 100}}
+                        sx = {{margin: 2,marginLeft: 4 , minWidth: 100}}
                         onClick={()=> {handleSubmit()}}
                     >
                         Submit
@@ -206,9 +279,8 @@ function AddFarm(props) {
                         variant='contained'
                         onClick={() => {
                             handleClose();
-                            setNewFarm(null);
                         }}
-                        sx = {{margin: 3, minWidth: 100}}
+                        sx = {{margin: 2, minWidth: 100}}
                     >
                         Close
                     </Button>
