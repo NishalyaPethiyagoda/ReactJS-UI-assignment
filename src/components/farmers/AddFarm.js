@@ -78,7 +78,15 @@ function AddFarm(props) {
         })
     }
 
-    const handleAddFarmClick = () => setAddFarmModal(true);
+    const handleAddFarmClick = () => {
+
+        setNewFarm({
+            ...newFarm, 
+            imageFile: null,
+            imageSrc: defaultFarmImageSrc,
+        });
+        setAddFarmModal(true);
+    };
 
     const schema = z.object({
         name: z.string().nonempty().min(4).max(50).regex(/^[a-zA-Z ]*$/),
@@ -99,13 +107,22 @@ function AddFarm(props) {
 
         e.preventDefault();
         const result  = schema.safeParse(newFarm);
-        //setFarmValues(newFarm);
 
-        // if(formData.imageFile===null)
-        // {
-        //     setImageError('error') ;
-        // }
-        // else{
+        if(newFarm.imageFile===null)
+        {
+            setImageError('error') ;
+        }
+        else{
+            //setting the newFarm values to a FormData() tyoe to post through axios
+            const formData = new FormData();
+
+            formData.append("name", newFarm.name);
+            formData.append("latitude", newFarm.latitude);
+            formData.append("longitude", newFarm.longitude);
+            formData.append("noOfCages", newFarm.noOfCages);
+            formData.append("hasBarge", newFarm.hasBarge);
+            formData.append("imageFile", newFarm.imageFile);
+
             setImageError('');
 
             if(!result.success)
@@ -118,25 +135,15 @@ function AddFarm(props) {
             }
             else
             {
-                const formData = new FormData();
-
-                formData.append("name", newFarm.name);
-                formData.append("latitude", newFarm.latitude);
-                formData.append("longitude", newFarm.longitude);
-                formData.append("noOfCages", newFarm.noOfCages);
-                formData.append("hasBarge", newFarm.hasBarge);
-                formData.append("imageFile", newFarm.imageFile);
-
-
                 axios.post('http://localhost:12759/api/Farm', formData )
                     .then(response => {
-                        console.log(response.data);
+
                     props.onAddFarm();
                     
                     handleClose();
                     });
             } 
-        // }
+        }
     }
 
     const showPreview = (event) => 
@@ -144,6 +151,7 @@ function AddFarm(props) {
         if(event.target.files && event.target.files[0])
         {
             let imageFile1 = event.target.files[0];
+
             setNewFarm({
                 ...newFarm, 
                 imageFile: imageFile1,
