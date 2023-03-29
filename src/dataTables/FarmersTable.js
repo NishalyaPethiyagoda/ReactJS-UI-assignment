@@ -14,7 +14,7 @@ import {useState} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import EditFarm from '../components/farmers/EditFarm';
 import AssignedWorkers from '../components/assignedWorkers/AssignedWorkers';
-
+import  Box  from '@mui/material/Box';
 
 
 export default function FarmersTable(props) {
@@ -83,13 +83,15 @@ export default function FarmersTable(props) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="left">Picture</TableCell>
+            
             {/* <TableCell align="left">Farm ID</TableCell> */}
+            <TableCell align="left">Picture</TableCell>
             <TableCell align="left">Farm Name</TableCell>
             <TableCell align="left">Lattitude</TableCell>
             <TableCell align="left">Longitute</TableCell>
             <TableCell align="left">No of Cages</TableCell>
             <TableCell align="left">Farm has Barge?</TableCell>
+            <TableCell align="left"></TableCell>
             <TableCell align="left"></TableCell>
             <TableCell align="left"></TableCell>
           </TableRow>
@@ -104,9 +106,12 @@ export default function FarmersTable(props) {
                   hover role = "checkbox"
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align='right'>
+                  <TableCell align="left">
+                    <Box sx={{height: '90px', width: '100px'}}>
+                      <img src={farm.imageName} style={{height: '100%', width: '100%'}}></img>
+                    </Box>
+                    
                   </TableCell>
-                  {/* <TableCell align="left">{farm.id}</TableCell> */}
                   <TableCell align="left">{farm.name}</TableCell>
                   <TableCell align="left">{parseFloat(farm.latitude.toString()).toFixed(4)}</TableCell>
                   <TableCell align="left">{parseFloat(farm.longitude.toString()).toFixed(4)}</TableCell>
