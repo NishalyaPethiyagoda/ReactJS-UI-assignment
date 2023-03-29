@@ -44,7 +44,7 @@ function UpdateWorker(props ) {
     }, []);
 
     const validationScheme = z.object( {
-        name: z.string().min(3).max(25),
+        name: z.string().min(3).max(25).regex(/^[a-zA-Z ]*$/),
         age: z.number().int().positive().min(18).max(60),
         email: z.string().email().min(5).max(25),
         designationId: z.number().min(1)
@@ -113,7 +113,9 @@ function UpdateWorker(props ) {
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
                         defaultValue={editingWorker.name} 
-                        onChange={(e) => setWorker({...editingWorker, name: e.target.value})}
+                        onChange={(e) => {
+                            setWorker({...editingWorker, name: e.target.value});
+                        }}
                         autocomplete="off"
                         helperText={nameError}
                     />
@@ -126,7 +128,8 @@ function UpdateWorker(props ) {
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
                         defaultValue={editingWorker.age} 
-                        onChange={(e) => setWorker({...editingWorker, age: parseInt(e.target.value)})}
+                        onChange={(e) => setWorker({...editingWorker, age: parseFloat(e.target.value)})}
+                        inputProps={{step: '1', min: 18, max: 60 }}
                         autocomplete="off"
                         helperText={ageError}
                     />

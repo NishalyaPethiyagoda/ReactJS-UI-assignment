@@ -25,7 +25,7 @@ function EditFarm( props ) {
     const [farm, setSelectedFarm] = useState(props.selectedFarm);
 
     const validationSchema = z.object({
-        name: z.string().min(4).max(50),
+        name: z.string().min(4).max(50).regex(/^[a-zA-Z ]*$/),
         latitude: z.number().min(-90).max(90),
         longitude: z.number().min(-180).max(180),
         noOfCages: z.number().int().positive().max(200),
@@ -126,7 +126,7 @@ function EditFarm( props ) {
                         sx={{minWidth:295 , marginTop: 3}}
                         variant="outlined"
                         defaultValue={farm.noOfCages}
-                        onChange={(e) => setSelectedFarm({...farm, noOfCages: parseInt(e.target.value)})}
+                        onChange={(e) => setSelectedFarm({...farm, noOfCages: parseFloat(e.target.value)})}
                         autoComplete= "off"
                         helperText = {noOfCagesError}
                     />

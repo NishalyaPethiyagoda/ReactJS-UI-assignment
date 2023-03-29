@@ -52,8 +52,8 @@ function AddWorker(props) {
     }
 
     const validationScheme = z.object( {
-        name: z.string().min(3).max(25),
-        age: z.number().int().positive().min(18).max(60),
+        name: z.string().min(3).max(25).regex(/^[a-zA-Z ]*$/),
+        age: z.number().int().min(18).max(60),
         email: z.string().email().min(5).max(25),
         certifiedDate: z.date().min( new Date()),
         designationId: z.number().min(1)
@@ -64,7 +64,6 @@ function AddWorker(props) {
     const [emailError, setEmailError] = useState('');
     const [certifiedDateError, setCertifiedDateError] = useState('');
     const [designationIdError, setDesignationIdError] = useState('');
-
 
     const handleFormSubmit = ()=>{
 
@@ -83,7 +82,6 @@ function AddWorker(props) {
         else{
             if(!submitResult.success)
             {
-                
                 submitResult.error.format().name? setNameError(submitResult.error.format().name._errors[0]) : setNameError('');
                 submitResult.error.format().age? setAgeError(submitResult.error.format().age._errors[0] ): setAgeError('');
                 submitResult.error.format().email? setEmailError(submitResult.error.format().email._errors[0]) : setEmailError('');
@@ -136,7 +134,14 @@ function AddWorker(props) {
                         type="text"
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
-                        onChange={(e) => setWorker({...newWorker, name: e.target.value})}
+                        onChange={(e) => {
+                            // if (/^\d+$/.test(e.target.value)) {
+                            //     setNameError('Name cannot contain numbers');
+                            // } else {
+                                setNameError('');
+                                setWorker({...newWorker, name: e.target.value});
+                            // }
+                        }}
                         autocomplete="off"
                         helperText={nameError}
                     />
@@ -149,7 +154,8 @@ function AddWorker(props) {
                         type="number"
                         sx={{minWidth: 295, marginTop:3}} 
                         variant="outlined"  
-                        onChange={(e) => setWorker({...newWorker, age: parseInt(e.target.value)})}
+                        onChange={(e) => setWorker({...newWorker, age: parseFloat(e.target.value)})}
+                        inputProps={{step: '1', min: 18, max: 60 }}
                         autocomplete="off"
                         helperText={ageError}
                     />
