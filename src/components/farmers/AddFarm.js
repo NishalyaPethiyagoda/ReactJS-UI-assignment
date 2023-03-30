@@ -48,7 +48,9 @@ function AddFarm(props) {
     ];
 
     const [newFarm , setNewFarm] = useState({
+
         imageName:null,
+        imageSrc: null,
         imageFile: null,
         name: null,
         latitude: null,
@@ -155,7 +157,7 @@ function AddFarm(props) {
             setNewFarm({
                 ...newFarm, 
                 imageFile: imageFile1,
-                imageSrc: event.target.files[0]?.src,
+                imageSrc: imageFile1.src,
             })
             // const reader = new FileReader();
             
@@ -231,7 +233,6 @@ function AddFarm(props) {
                             type='text'
                             sx={{minWidth:295 , marginTop: 2}}
                             variant="outlined"
-                            //onKeyDown={}
                             onChange={(e) => {
                                 setNewFarm({...newFarm, name: e.target.value});
                             }}
@@ -309,7 +310,6 @@ function AddFarm(props) {
                         <Button
                             variant='contained'
                             sx = {{margin: 2,marginLeft: 4 , minWidth: 100}}
-                            //onClick={()=> {handleSubmit()}}
                             type="submit"
                         >
                             Submit
