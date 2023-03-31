@@ -94,7 +94,7 @@ function AddWorker(props) {
             setWorker({
                 ...newWorker,
                 workerPhoto: null,
-                workerPhotoSrc: defaultFarmImageSrc,
+                workerPhotoSrc: null,
             })
         }
     }

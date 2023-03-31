@@ -180,7 +180,9 @@ export default function FarmersTable(props) {
             onTableRefresh = {props.tableRefresh}
             selectedFarm={selectedFarm}
             setEditPopupModal={setEditPopup}
-        ></EditFarmWithRef>
+        >
+          {console.log(selectedFarm)}
+        </EditFarmWithRef>
       </Modal>
     </TableContainer>
   );

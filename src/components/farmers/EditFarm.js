@@ -32,7 +32,15 @@ const style = {
 
 function EditFarm( props ) {
 
-    const [farm, setSelectedFarm] = useState(props.selectedFarm);
+    const [farm, setSelectedFarm] = useState({
+        name: props.selectedFarm.name,
+        latitude: props.selectedFarm.latitude,
+        longitude: props.selectedFarm.longitude,
+        noOfCages: props.selectedFarm.noOfCages,
+        hasBarge: props.selectedFarm.hasBarge,
+        imageName: props.selectedFarm.imageName,
+        //imageFile: props.farm.imageFile,
+    });
 
     const validationSchema = z.object({
         name: z.string().min(4).max(50).regex(/^[a-zA-Z ]*$/),
@@ -125,7 +133,7 @@ function EditFarm( props ) {
                             style={imgContainerStyle}
                         >
                             <img 
-                                src={ farm.imageSrc } 
+                                src={ farm.imageName } 
                                 alt="Default Farm Image" 
                                 style={imgContainerStyle}>
                             </img>
