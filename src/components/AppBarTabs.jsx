@@ -5,12 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 // const pages = ['Farm', 'workers'];
 
 function ResponsiveAppBar() {
 
   let navigate = useNavigate();
+  const blueColor = '#0077be'
+  const [selectedFarms , setSelectedFarms] = useState('blue');
 
   return (
     <AppBar sx={{ position:'static', color:'secondary'}}>
@@ -37,10 +40,14 @@ function ResponsiveAppBar() {
           <Box sx={{ display: { md: 'flex' } }}>
             
               <Button 
-                  onClick={()=> {navigate('/farms')}} 
+                  onClick={()=> {
+                    navigate('/farms');
+                    setSelectedFarms('blue');
+                  }} 
                   sx={{
                     marginLeft: 1, 
                     my: 2, 
+                    backgroundColor: selectedFarms === 'blue' ? 'darkblue' : undefined, 
                     color: 'white', 
                     fontWeight:500,
                     display: 'block',
@@ -51,11 +58,15 @@ function ResponsiveAppBar() {
               </Button> 
 
               <Button 
-                  onClick={()=> {navigate('/workers')}} 
+                  onClick={()=> {
+                    navigate('/workers');
+                    setSelectedFarms('red');
+                  }} 
                   sx={{ 
                         marginLeft: 1,
                         my: 2, 
                         color: 'white', 
+                        backgroundColor: selectedFarms === 'red' ? 'darkblue' : undefined,
                         fontWeight:500,
                         display: 'block',
                         minWidth: 110 }}

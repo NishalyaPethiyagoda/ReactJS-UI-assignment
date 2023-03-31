@@ -12,6 +12,7 @@ import {useState} from 'react'
 import UpdateWorker from '../components/workers/UpdateWorker';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import { Box } from '@mui/system';
+import Avatar from '@mui/material/Avatar';
 
 export default function WorkersTable(props) {
 
@@ -63,9 +64,9 @@ export default function WorkersTable(props) {
 
   return (
     
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper}  sx={{ maxHeight: 540}}>
       
-        <Table  aria-label="simple table">
+        <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
             <TableCell align="left">Worker's Picture</TableCell>
@@ -84,10 +85,8 @@ export default function WorkersTable(props) {
               
                 return(
                   <TableRow hover role = "checkbox" key={worker.name}>
-                    <TableCell align='left'>
-                      <Box sx={{height: '90px', width: '100px'}}>
-                        <img src={worker.workerPhotoSrc} style={{width: '100%' , height: '100%'}}></img>
-                      </Box> 
+                    <TableCell align='center'>
+                        <Avatar align='center' src={worker.workerPhotoSrc} sx={{ width: 60, height: 60 }}/>
                     </TableCell>
                     <TableCell align='left' component="th" scope="row" sx={{paddingLeft: 3}}>
                       {worker.name}  

@@ -33,15 +33,6 @@ const style = {
 function EditFarm( props ) {
 
     const [farm, setSelectedFarm] = useState(props.selectedFarm);
-    const [transformedFarm ,settransformedFarm] = useState({
-        name: farm.name,
-        latitude: farm.latitude,
-        longitude: farm.longitude,
-        noOfCages: farm.noOfCages,
-        hasBarge: farm.hasBarge,
-        imageFile: farm.imageFile,
-
-    })
 
     const validationSchema = z.object({
         name: z.string().min(4).max(50).regex(/^[a-zA-Z ]*$/),
@@ -63,51 +54,52 @@ function EditFarm( props ) {
         
         const isInvalidSubmit = validationSchema.safeParse(farm);
 
-        if(!isInvalidSubmit.success){
-            isInvalidSubmit.error.format().name? setNameError( isInvalidSubmit.error.format().name._errors[0] ): setNameError('');
-            isInvalidSubmit.error.format().latitude? setLatitudeError( isInvalidSubmit.error.format().latitude._errors[0]): setLatitudeError('');
-            isInvalidSubmit.error.format().longitude? setLongitudeError( isInvalidSubmit.error.format().longitude._errors[0]): setLongitudeError('');
-            isInvalidSubmit.error.format().noOfCages? setNoOfCagesError( isInvalidSubmit.error.format().noOfCages._errors[0]): setNoOfCagesError('');
-            isInvalidSubmit.error.format().hasBargeError? setHasBargeError( isInvalidSubmit.error.format().hasBargeError._errors[0]): setHasBargeError('');
+        if(farm.imageFile === null)
+        {
+            setHasImageError('error');
         }
         else{
-            
-            const formData = new FormData();
 
-            formData.append("Name", farm.name);
-            formData.append("Latitude", farm.latitude);
-            formData.append("Longitude", farm.longitude);
-            formData.append("NoOfCages", farm.noOfCages);
-            formData.append("HasBarge", farm.hasBarge);
-            formData.append("ImageFile", farm.imageFile);
-
-            try {
-                const response = await axios.put(`http://localhost:12759/api/Farm/${farm.id}`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                    })
-                .then(response => {
-                    console.log(response.data);
-
-                    props.onTableRefresh();
-                    props.setEditPopupModal(false);
-                });
-
-                console.log("Update successful:", response.data);
-
-            } catch (error) {
-                console.error("Update failed:", error);  
+            if(!isInvalidSubmit.success){
+                isInvalidSubmit.error.format().name? setNameError( isInvalidSubmit.error.format().name._errors[0] ): setNameError('');
+                isInvalidSubmit.error.format().latitude? setLatitudeError( isInvalidSubmit.error.format().latitude._errors[0]): setLatitudeError('');
+                isInvalidSubmit.error.format().longitude? setLongitudeError( isInvalidSubmit.error.format().longitude._errors[0]): setLongitudeError('');
+                isInvalidSubmit.error.format().noOfCages? setNoOfCagesError( isInvalidSubmit.error.format().noOfCages._errors[0]): setNoOfCagesError('');
+                isInvalidSubmit.error.format().hasBargeError? setHasBargeError( isInvalidSubmit.error.format().hasBargeError._errors[0]): setHasBargeError('');
             }
-
-            // axios.put(`http://localhost:12759/api/Farm/${farm.id}`, transformedFarm)
-            // .then(response => {
-            //         console.log(response.data)
-            //         props.onTableRefresh();
-            //     }      
-            // );
-            // props.setEditPopupModal(false);
-        }   
+            else{
+                
+                const formData = new FormData();
+    
+                formData.append("Name", farm.name);
+                formData.append("Latitude", farm.latitude);
+                formData.append("Longitude", farm.longitude);
+                formData.append("NoOfCages", farm.noOfCages);
+                formData.append("HasBarge", farm.hasBarge);
+                formData.append("ImageFile", farm.imageFile);
+    
+                try {
+                    const response = await axios.put(`http://localhost:12759/api/Farm/${farm.id}`, formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                        })
+                    .then(response => {
+                        console.log(response.data);
+    
+                        props.onTableRefresh();
+                        props.setEditPopupModal(false);
+                    });
+    
+                    console.log("Update successful:", response.data);
+    
+                } catch (error) 
+                {
+                    console.error("Update failed:", error);  
+                }
+            }   
+        }
+        
     }
 
     const handleCloseModal = () => {
@@ -141,7 +133,7 @@ function EditFarm( props ) {
                     <Button
                         variant="contained"
                         component="label"
-                        sx={{width: '100%', height: 25, }}
+                        sx={{width: '100%', height: 25, backgroundColor: hasImageError==='error'? 'red': 'blue', }}
                         >
                         Upload Image
                         <input
@@ -167,7 +159,7 @@ function EditFarm( props ) {
                         required= {true}
                         label="Name"
                         type="text"
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 2}}
                         variant="outlined"
                         defaultValue={farm.name}
                         onChange={(e) => setSelectedFarm({...farm, name: e.target.value})}
@@ -180,7 +172,7 @@ function EditFarm( props ) {
                         required={true}
                         label="Lattitude"
                         type="number"
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         defaultValue={farm.latitude}
                         onChange={(e) => setSelectedFarm({...farm, latitude: parseFloat(e.target.value)})}
@@ -193,7 +185,7 @@ function EditFarm( props ) {
                         required = {true}
                         label="Longitude"
                         type="number"
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         defaultValue={farm.longitude}
                         onChange={(e) => setSelectedFarm({...farm, longitude: parseFloat(e.target.value)})}
@@ -205,7 +197,7 @@ function EditFarm( props ) {
                         id='outlined-basic'
                         label="Number of Cages"
                         type="number"
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         defaultValue={farm.noOfCages}
                         onChange={(e) => setSelectedFarm({...farm, noOfCages: parseFloat(e.target.value)})}
@@ -218,7 +210,7 @@ function EditFarm( props ) {
                         id='outlined-basic'
                         required = {true}
                         label="Farm has a Barge?"
-                        sx={{minWidth:295 , marginTop: 3}}
+                        sx={{minWidth:295 , marginTop: 1}}
                         variant="outlined"
                         defaultValue={farm.hasBarge}
                         onChange={(e) => setSelectedFarm({...farm, hasBarge: Boolean(e.target.value)})}
@@ -231,20 +223,22 @@ function EditFarm( props ) {
                             </MenuItem>
                         ))}
                     </TextField>
-                    <Button
-                        variant='contained'
-                        onClick={()=> handleSubmit(farm) }
-                        sx = {{margin: 3, minWidth: 100}}
-                    >
-                        Submit
-                    </Button>
-                    <Button
-                        variant='contained'
-                        onClick={() => handleCloseModal()}
-                        sx = {{margin: 3, minWidth: 100}}
-                    >
-                        Close
-                    </Button>
+                    <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                        <Button
+                            variant='contained'
+                            onClick={()=> handleSubmit(farm) }
+                            sx = {{ minWidth: 100}}
+                        >
+                            Submit
+                        </Button>
+                        <Button
+                            variant='contained'
+                            onClick={() => handleCloseModal()}
+                            sx = {{minWidth: 100}}
+                        >
+                            Close
+                        </Button>
+                    </Box>
                 </Box>
             </Modal>
         </div>

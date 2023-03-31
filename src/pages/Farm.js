@@ -7,6 +7,7 @@ import AddFarm from '../components/farmers/AddFarm';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const primaryTextColor = '#000080';
 
 function Farms() {
 
@@ -15,6 +16,8 @@ function Farms() {
         {id: 2, label: "No" , value: false},
     ];
 
+    //console.log(farmList);
+    
     const [farmList, getFarmList] = useState([]);
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
 
@@ -31,24 +34,26 @@ function Farms() {
 
     return (
         <div>
-            <Container>
+            <Container sx={{color: primaryTextColor }}>
                 <h1 >Farms Table</h1>
             </Container>
-            <Container align="right" >
+            <Container align="right" sx={{minWidth: '90%' }} >
                 <AddFarm 
                     onAddFarm = {handleTableRefresh} 
                     yesNoDropdown={yesNoDropdown}
                 ></AddFarm>
-            </Container>
-            <Box sx={{margin: '34px'}}>
+            </Container >
+            
+            <Container sx={{marginTop: '12px' , minWidth:'95%', }}>
                 <FarmersTable 
                     farmList={farmList} 
                     yesNoDropdown={yesNoDropdown}
                     tableRefresh={handleTableRefresh} 
                 ></FarmersTable>
-            </Box>
+            </Container>
         </div>
     )
 }
 
 export default Farms
+{/* backgroundColor: 'blue' */}

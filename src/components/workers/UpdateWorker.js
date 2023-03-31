@@ -16,7 +16,6 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '20%',
-    height: '90%',
     minWidth: '300px',
     bgcolor: 'background.paper',
     border: '2px solid #000',
@@ -60,27 +59,6 @@ function UpdateWorker(props ) {
     const [certifiedDateError, setCertifiedDateError] = useState('');
     const [designationIdError, setDesignationIdError] = useState('');
     const [workerPhotoError , setWorkerPhotoError] =useState('');
-
-
-    const showPreview = (event) => {
-
-        if(event.target.files && event.target.files[0] )
-        {
-            let imageFile1 = event.target.files[0];
-            setWorker({
-                ...editingWorker,
-                workerPhoto: imageFile1,
-                workerPhotoSrc: imageFile1.src,
-            })
-        }
-        else
-        {
-            // setWorker({
-            //     ...editingWorker,
-            //     workerPhotoSrc: editingWorker.workerPhotoSrc,
-            // })
-        }
-    }
 
     const updateWorkerSubmit = async (editingWorker) => {
 
@@ -151,7 +129,7 @@ function UpdateWorker(props ) {
                                 width: '100px',height: '110px',}}
                         >
                             <img src={editingWorker.workerPhotoSrc } 
-                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '130px',height: '130px'}}
+                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '100px',height: '110px',}}
                             ></img>
                         </Container>
 
@@ -166,7 +144,7 @@ function UpdateWorker(props ) {
                                 hidden
                                 accept='image/*'
                                 onChange={ (e) => 
-                                
+                                        
                                     (e.target.files && e.target.files[0])?
                                         setWorker({
                                         ...editingWorker,
@@ -183,7 +161,7 @@ function UpdateWorker(props ) {
                             required={true}
                             label="Name" 
                             type="text"
-                            sx={{minWidth: 295, marginTop:3}} 
+                            sx={{width: '100%', minWidth: 295, marginTop:2}} 
                             variant="outlined"  
                             defaultValue={editingWorker.name} 
                             onChange={(e) => {
@@ -198,7 +176,7 @@ function UpdateWorker(props ) {
                             rewuired={true}
                             label="Age" 
                             type="number"
-                            sx={{minWidth: 295, marginTop:3}} 
+                            sx={{width: '100%', minWidth: 295, marginTop:1}} 
                             variant="outlined"  
                             defaultValue={editingWorker.age} 
                             onChange={(e) => setWorker({...editingWorker, age: parseFloat(e.target.value)})}
@@ -212,7 +190,7 @@ function UpdateWorker(props ) {
                             required={true}
                             label="Email" 
                             type="email"
-                            sx={{minWidth: 295 , marginTop:3}} 
+                            sx={{width: '100%', minWidth: 295 , marginTop:1}} 
                             variant="outlined" 
                             defaultValue={editingWorker.email}
                             onChange={(e) => setWorker({...editingWorker, email: e.target.value})}
@@ -227,7 +205,7 @@ function UpdateWorker(props ) {
                                     id="outlined-basic"
                                     required ={true}
                                     label="Worker Certified Until (Date)"
-                                    sx={{minWidth: 295, marginTop:3}}
+                                    sx={{width: '100%', minWidth: 295, marginTop:1}}
                                     variant="outlined"
                                     type="date"
                                     defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
@@ -253,7 +231,7 @@ function UpdateWorker(props ) {
                             onChange={(e) => setWorker({...editingWorker, designationId: parseInt(e.target.value)})}
                             autocomplete="off"
                             helperText={designationIdError}
-                            sx={{minWidth: 295, marginTop:3}}
+                            sx={{width: '100%', minWidth: 295, marginTop:1}}
                         >
                             {positions.map( (designation) => (
                                 <MenuItem 
@@ -265,19 +243,22 @@ function UpdateWorker(props ) {
                                 )) 
                             }
                         </TextField>
-                    
-                        <Button 
-                            variant="contained" 
-                            onClick={() => updateWorkerSubmit(editingWorker)} 
-                            sx={{margin: 3, minWidth:100}}
-                        >
-                            Submit
-                        </Button>
-                            
-                        <Button 
-                            variant="contained" 
-                            onClick={handleClose} 
-                            sx={{marginLeft: 4}}>Close</Button>
+                        <Box sx={{width: '100%', marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 3 }}>
+                            <Button 
+                                variant="contained" 
+                                onClick={() => updateWorkerSubmit(editingWorker)} 
+                                sx={{ minWidth:100}}
+                            >
+                                Submit
+                            </Button>
+                                
+                            <Button 
+                                variant="contained" 
+                                onClick={handleClose} 
+                                sx={{ minWidth:100}}
+                            >Close
+                            </Button>
+                        </Box>
                 </Box>
             </Modal>
         </div>

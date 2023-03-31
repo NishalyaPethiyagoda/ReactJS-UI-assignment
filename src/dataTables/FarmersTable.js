@@ -8,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button, Modal } from '@mui/material';
+import { backdropClasses, Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
@@ -79,12 +79,10 @@ export default function FarmersTable(props) {
   })
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer component={Paper}  sx={{ maxHeight:  540}}>
+      <Table sx={{ minWidth: 650 }} stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            
-            {/* <TableCell align="left">Farm ID</TableCell> */}
             <TableCell align="left">Picture</TableCell>
             <TableCell align="left">Farm Name</TableCell>
             <TableCell align="left">Lattitude</TableCell>
@@ -138,7 +136,6 @@ export default function FarmersTable(props) {
                       variant="contained" 
                       onClick={ () => handleDeleteClick(farm) }
                     >
-                      {/* {console.log(tablerRefreshKey)} */}
                       Delete
                     </Button>
                   </TableCell>
@@ -185,25 +182,6 @@ export default function FarmersTable(props) {
             setEditPopupModal={setEditPopup}
         ></EditFarmWithRef>
       </Modal>
-
-      {/* <Modal
-        open = {Boolean(openDeleteModal)}
-      >
-        {React.forwardRef((props, ref) => (
-
-          <ConfirmationPopup 
-            {...props}
-            forwardedRef={ref}
-
-            confirmationMessage={"Are you sure you want to delete this farm?"}
-            confirmButtonMessage={"Delete"}
-            confirmedAction = {handleDeleteAction}
-            openPopupModal ={setDeletePopupModal}
-            closePopupModal= {handleCloseDeletePopup}
-          />
-        ))}
-        
-      </Modal> */}
     </TableContainer>
   );
 }

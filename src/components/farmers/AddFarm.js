@@ -15,7 +15,6 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '20%',
-    height: '95%',
     minWidth: '300px',
     
     bgcolor: 'background.paper',
@@ -159,19 +158,6 @@ function AddFarm(props) {
                 imageFile: imageFile1,
                 imageSrc: imageFile1.src,
             })
-            // const reader = new FileReader();
-            
-            // reader.onload = x => {
-            //     return function(e){
-            //         setNewFarm({
-            //             ...newFarm, 
-            //             imageFile: e.target.result,
-            //             imageSrc: e.target.result,
-            //         })
-            //     }
-                
-            // }
-            // reader.readAsDataURL(imageFile1)
         }
         else{
             setNewFarm({
@@ -185,6 +171,7 @@ function AddFarm(props) {
     return (
         <div>
             <Button
+                sx={{minWidth: 180 }}
                 variant='contained'
                 onClick={() => handleAddFarmClick()}
             >
@@ -231,7 +218,7 @@ function AddFarm(props) {
                             required={true}
                             label="Name"
                             type='text'
-                            sx={{minWidth:295 , marginTop: 2}}
+                            sx={{minWidth:295 , marginTop: 2, width: '100%'}}
                             variant="outlined"
                             onChange={(e) => {
                                 setNewFarm({...newFarm, name: e.target.value});
@@ -246,7 +233,7 @@ function AddFarm(props) {
                             label="Lattitude"
                             type="number"
                             inputProps={{step: "any"}}
-                            sx={{minWidth:295 , marginTop: 1}}
+                            sx={{minWidth:295 , marginTop: 1, width: '100%'}}
                             variant="outlined"
                             onChange={(e) => {
                                 setNewFarm({...newFarm, latitude: parseFloat(e.target.value)});
@@ -261,7 +248,7 @@ function AddFarm(props) {
                             label="Longitude"
                             type="number"
                             inputProps={{step: "any"}}
-                            sx={{minWidth:295 , marginTop: 1}}
+                            sx={{minWidth:295 , marginTop: 1, width: '100%'}}
                             variant="outlined"
                             onChange={(e) => {
                                 setNewFarm({...newFarm, longitude: parseFloat(e.target.value)});
@@ -276,7 +263,7 @@ function AddFarm(props) {
                             label="Number of Cages"
                             type="number"
                             inputProps={{inputMode: "numeric"}}
-                            sx={{minWidth:295 , marginTop: 1}}
+                            sx={{minWidth:295 , marginTop: 1, width: '100%'}}
                             variant="outlined"
                             onChange={(e) => {
                                 setNewFarm({...newFarm, noOfCages: parseFloat(e.target.value)});
@@ -291,7 +278,7 @@ function AddFarm(props) {
                             id='outlined-basic'
                             label="Farm has a Barge?"
                             required={true}
-                            sx={{minWidth:295 , marginTop: 1}}
+                            sx={{minWidth:295 , marginTop: 1, width: '100%'}}
                             variant="outlined"
                             onChange={(e) => {
                                 setNewFarm({...newFarm, hasBarge: Boolean(e.target.value)});
@@ -306,23 +293,25 @@ function AddFarm(props) {
                             ))}
                         </TextField>
                     
-                                
-                        <Button
-                            variant='contained'
-                            sx = {{margin: 2,marginLeft: 4 , minWidth: 100}}
-                            type="submit"
-                        >
-                            Submit
-                        </Button>
-                        <Button
-                            variant='contained'
-                            onClick={() => {
-                                handleClose();
-                            }}
-                            sx = {{margin: 2, minWidth: 100}}
-                        >
-                            Close
-                        </Button>
+                        <Box sx={{ marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                            <Button
+                                variant='contained'
+                                sx = {{ minWidth: 100}}
+                                type="submit"
+                            >
+                                Submit
+                            </Button>
+                            <Button
+                                variant='contained'
+                                onClick={() => {
+                                    handleClose();
+                                }}
+                                sx = {{ minWidth: 100}}
+                            >
+                                Close
+                            </Button>
+                        </Box>        
+                        
 
                     </form>
                 </Box>

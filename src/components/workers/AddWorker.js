@@ -18,7 +18,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '20%',
-  height: '90%',
+
   minWidth: '300px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -176,6 +176,7 @@ function AddWorker(props) {
     return (
         <div>
             <Button 
+                sx={{minWidth: 180 }}
                 variant="contained" 
                 onClick={handleOpen} 
                 color="primary">
@@ -197,11 +198,11 @@ function AddWorker(props) {
                             style = {{display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                width: '100px',
+                                width: '110px',
                                 height: '110px',}}
                         >
                             <img src={newWorker.workerPhotoSrc===null? defaultFarmImageSrc: newWorker.workerPhotoSrc } 
-                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '130px',height: '130px'}}
+                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '110px',height: '110px'}}
                             ></img>
                         </Container>
                         <Button
@@ -224,7 +225,7 @@ function AddWorker(props) {
                             required={true}
                             label="Name" 
                             type="text"
-                            sx={{minWidth: 295, marginTop:1}} 
+                            sx={{width: '100%', minWidth: 295, marginTop:1}} 
                             variant="outlined"  
                             onChange={(e) => {
                                 // if (/^\d+$/.test(e.target.value)) {
@@ -244,7 +245,7 @@ function AddWorker(props) {
                             rewuired={true}
                             label="Age" 
                             type="number"
-                            sx={{minWidth: 295, marginTop:1}} 
+                            sx={{width: '100%', minWidth: 295, marginTop:1}} 
                             variant="outlined"  
                             onChange={(e) => setWorker({...newWorker, age: parseFloat(e.target.value)})}
                             inputProps={{step: '1', min: 18, max: 60 }}
@@ -258,7 +259,7 @@ function AddWorker(props) {
                             required={true}
                             label="Email" 
                             type="email"
-                            sx={{minWidth: 295 , marginTop:1}} 
+                            sx={{width: '100%', minWidth: 295 , marginTop:1}} 
                             variant="outlined" 
                             onChange={(e) => setWorker({...newWorker, email: e.target.value})}
                             autocomplete="off"
@@ -275,7 +276,7 @@ function AddWorker(props) {
                             onChange={(e) => setWorker({...newWorker, designationId: parseInt(e.target.value)})}
                             autocomplete="off"
                             helperText={designationIdError}
-                            sx={{minWidth: 295, marginTop:1}}
+                            sx={{width: '100%', minWidth: 295, marginTop:1}}
                         >
                             {props.designations.map( (designation) => (
                                 <MenuItem 
@@ -295,7 +296,7 @@ function AddWorker(props) {
                                     id="outlined-basic"
                                     required ={true}
                                     label="Worker Certified Until (Date)"
-                                    sx={{minWidth: 295, marginTop:1}}
+                                    sx={{width: '100%', minWidth: 295, marginTop:1}}
                                     variant="outlined"
                                     type="date"
                                     onChange={(e) =>setWorker({...newWorker, certifiedDate: e.target.value })}
@@ -307,12 +308,12 @@ function AddWorker(props) {
                                 />
                             </Grid>
                         </Grid>
-
-                        <Button variant="contained" type="submit" sx={{margin: 1, marginLeft: 4, minWidth:100}} autocomplete="off">
-                            Submit
-                        </Button>
-                        <Button variant="contained" onClick={handleClose} sx={{margin: 1,marginLeft: 2, minWidth:100}}>Close</Button>
-
+                        <Box sx={{ width: '100%', marginTop: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 3 }}>
+                            <Button variant="contained" type="submit" sx={{ minWidth:100}} autocomplete="off">
+                                Submit
+                            </Button>
+                            <Button variant="contained" onClick={handleClose} sx={{ minWidth:100}}>Close</Button>
+                        </Box>
                     </form>
                 </Box>
             

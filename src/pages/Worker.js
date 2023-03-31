@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AddWorker from '../components/workers/AddWorker';
 import axios from 'axios';
 
-
+const primaryTextColor = '#000080';
 
 function Workers() {
 
@@ -36,18 +36,18 @@ function Workers() {
     
     return (
         <div>
-            <Container sx={{color:"Secondary"}}>
+            <Container sx={{color: primaryTextColor }}>
                 <h1>Wokers Table</h1>
             </Container>
 
-            <Container align="right" >
+            <Container align="right" sx={{minWidth: '90%'}}>
                 <AddWorker
                     designations = {designations}
                     onAddWorker = {handleTableResfresh}
                 ></AddWorker>
             </Container>
 
-            <Box sx={{margin: '34px'}}>
+            <Box sx={{marginTop: '12px' , marginLeft: '54px', marginRight:'54px' }}>
                 <WorkersTable
                     designations= { designations}
                     workerList = {workerList}
