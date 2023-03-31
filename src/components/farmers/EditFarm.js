@@ -6,6 +6,7 @@ import { MenuItem, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import {z} from "zod";
+import { Container } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -20,9 +21,27 @@ const style = {
     p: 4,
   }; 
 
+  const imgContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '130px',
+    height: '130px', // Change this value as needed
+    
+  };
+
 function EditFarm( props ) {
 
     const [farm, setSelectedFarm] = useState(props.selectedFarm);
+    const [transformedFarm ,settransformedFarm] = useState({
+        name: farm.name,
+        latitude: farm.latitude,
+        longitude: farm.longitude,
+        noOfCages: farm.noOfCages,
+        hasBarge: farm.hasBarge,
+        imageFile: farm.imageFile,
+
+    })
 
     const validationSchema = z.object({
         name: z.string().min(4).max(50).regex(/^[a-zA-Z ]*$/),
@@ -37,9 +56,10 @@ function EditFarm( props ) {
     const [longitudeError, setLongitudeError] = useState('');
     const [noOfCagesError , setNoOfCagesError] = useState('');
     const [hasBargeError , setHasBargeError] = useState('');
+    const [hasImageError, setHasImageError] = useState('');
 
 
-    const handleSubmit = (farm) => {
+    const handleSubmit = async (farm) => {
         
         const isInvalidSubmit = validationSchema.safeParse(farm);
 
@@ -51,14 +71,42 @@ function EditFarm( props ) {
             isInvalidSubmit.error.format().hasBargeError? setHasBargeError( isInvalidSubmit.error.format().hasBargeError._errors[0]): setHasBargeError('');
         }
         else{
+            
+            const formData = new FormData();
 
-            axios.put(`http://localhost:12759/api/Farm/${farm.id}`, farm)
-            .then(response => {
-                    console.log(response.data)
+            formData.append("Name", farm.name);
+            formData.append("Latitude", farm.latitude);
+            formData.append("Longitude", farm.longitude);
+            formData.append("NoOfCages", farm.noOfCages);
+            formData.append("HasBarge", farm.hasBarge);
+            formData.append("ImageFile", farm.imageFile);
+
+            try {
+                const response = await axios.put(`http://localhost:12759/api/Farm/${farm.id}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+                })
+                .then(response => {
+                    console.log(response.data);
+
                     props.onTableRefresh();
-                }      
-            );
-            props.setEditPopupModal(false);
+                    props.setEditPopupModal(false);
+                });
+
+                console.log("Update successful:", response.data);
+
+            } catch (error) {
+                console.error("Update failed:", error);  
+            }
+
+            // axios.put(`http://localhost:12759/api/Farm/${farm.id}`, transformedFarm)
+            // .then(response => {
+            //         console.log(response.data)
+            //         props.onTableRefresh();
+            //     }      
+            // );
+            // props.setEditPopupModal(false);
         }   
     }
 
@@ -79,6 +127,40 @@ function EditFarm( props ) {
                     <Typography id="modal-modal-title">
                         Edit Farm
                     </Typography>
+
+                    <Container 
+                            sx={{backgroundColor: 'grey', marginTop:1, marginBottom: 1}}
+                            style={imgContainerStyle}
+                        >
+                            <img 
+                                src={ farm.imageSrc } 
+                                alt="Default Farm Image" 
+                                style={imgContainerStyle}>
+                            </img>
+                    </Container>
+                    <Button
+                            variant="contained"
+                            component="label"
+                            sx={{width: '100%', height: 25, }}
+                            >
+                            Upload Image
+                            <input
+                                type="file"
+                                hidden
+                                accept='image/*'
+                                onChange={(e) => 
+                                    
+                                        (e.target.files && e.target.files[0])?
+                                            setSelectedFarm({
+                                            ...farm,
+                                            imageFile: (e.target.files[0]),
+                                        }):
+                                        null
+                                    
+                                }
+                            />
+                    </Button>
+
                     <TextField
                         error = {nameError!=='' ? true : false}
                         id='outlined-basic'
