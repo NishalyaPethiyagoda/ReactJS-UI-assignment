@@ -86,72 +86,41 @@ function UpdateWorker(props ) {
 
         const updateResult = validationScheme.safeParse(editingWorker);
 
-        if(editingWorker.workerPhoto==null){
-            setWorkerPhotoError('error');
+        if(!updateResult.success){
+            updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
+            updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
+            updateResult.error.format().email? setEmailError(updateResult.error.format().email._errors[0]) : setEmailError('');
+            updateResult.error.format().designationId? setDesignationIdError(updateResult.error.format().designationId._errors[0] ): setDesignationIdError('');
         }
         else{
-                if(!updateResult.success){
-                    updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
-                    updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
-                    updateResult.error.format().email? setEmailError(updateResult.error.format().email._errors[0]) : setEmailError('');
-                    updateResult.error.format().designationId? setDesignationIdError(updateResult.error.format().designationId._errors[0] ): setDesignationIdError('');
-                }
-                else{
 
-                    const formData = new FormData();
+            const formData = new FormData();
 
-                    formData.append("Name", editingWorker.name);
-                    formData.append("Age", editingWorker.age);
-                    formData.append("Email", editingWorker.email);
-                    formData.append("CertifiedDate", new Date(editingWorker.certifiedDate).toISOString());
-                    formData.append("DesignationId", editingWorker.designationId);
-                    formData.append("ImageFile", editingWorker.workerPhoto);
-        
-                    // //console.log(editingWorker);
+            formData.append("Name", editingWorker.name);
+            formData.append("Age", editingWorker.age);
+            formData.append("Email", editingWorker.email);
+            formData.append("CertifiedDate", new Date(editingWorker.certifiedDate).toISOString());
+            formData.append("DesignationId", editingWorker.designationId);
+            formData.append("ImageFile", editingWorker.workerPhoto);
 
-                    // const form = e.target;
-                    // const updateWorker = new FormData();
-                    // updateWorker.append("Name", form.name.value);
-                    // updateWorker.append("Age", form.age.value);
-                    // updateWorker.append("Email", form.email.value);
-                    // updateWorker.append("CertifiedDate", form.certifiedDate.value);
-                    // updateWorker.append("DesignationId", form.designationId.value);
-                    // updateWorker.append("ImageFile", form.imageFile.files[0]);
-
-                    try {
-                        const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, 
-                            {
-                                headers: {
-                                    "Content-Type": "multipart/form-data"
-                                }
-                            })
-                            .then(response => {
-                                console.log(response.data);
-            
-                                props.tableRefresh();
-                                props.setOpenUpdateModal(false);
-                            });
-
-                        if (response.status === 200) {
-                        alert("Worker updated successfully!");
-                        } else {
-                        alert("Error updating worker.");
+            try {
+                const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, 
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
                         }
-                    } catch (error) {
-                        alert("Error updating worker.");
-                        console.log(error);
-                    }
-
-                    // axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
-                    //     .then( response => {
-                    //         console.log(response.data);
-                            
-                    //         props.tableRefresh();
-                    //         handleClose();
-                    //     });
-                }
-            
-           }
+                    })
+                    .then(response => {
+                        console.log(response.data);
+    
+                        props.tableRefresh();
+                        props.setOpenUpdateModal(false);
+                    });
+            } catch (error) {
+                alert("Error updating worker.");
+                console.log(error);
+            }
+        }
     }
 
     const handleClose = () =>{
