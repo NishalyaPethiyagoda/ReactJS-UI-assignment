@@ -86,10 +86,10 @@ function UpdateWorker(props ) {
 
         const updateResult = validationScheme.safeParse(editingWorker);
 
-        if(editingWorker.workerPhoto==null){
-            setWorkerPhotoError('error');
-        }
-        else{
+        // if(editingWorker.workerPhoto==null){
+        //     setWorkerPhotoError('error');
+        // }
+        // else{
                 if(!updateResult.success){
                     updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
                     updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
@@ -106,17 +106,6 @@ function UpdateWorker(props ) {
                     formData.append("CertifiedDate", new Date(editingWorker.certifiedDate).toISOString());
                     formData.append("DesignationId", editingWorker.designationId);
                     formData.append("ImageFile", editingWorker.workerPhoto);
-        
-                    // //console.log(editingWorker);
-
-                    // const form = e.target;
-                    // const updateWorker = new FormData();
-                    // updateWorker.append("Name", form.name.value);
-                    // updateWorker.append("Age", form.age.value);
-                    // updateWorker.append("Email", form.email.value);
-                    // updateWorker.append("CertifiedDate", form.certifiedDate.value);
-                    // updateWorker.append("DesignationId", form.designationId.value);
-                    // updateWorker.append("ImageFile", form.imageFile.files[0]);
 
                     try {
                         const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, 
@@ -131,27 +120,14 @@ function UpdateWorker(props ) {
                                 props.tableRefresh();
                                 props.setOpenUpdateModal(false);
                             });
-
-                        if (response.status === 200) {
-                        alert("Worker updated successfully!");
-                        } else {
-                        alert("Error updating worker.");
-                        }
-                    } catch (error) {
+                    } catch (error) 
+                    {
                         alert("Error updating worker.");
                         console.log(error);
                     }
-
-                    // axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
-                    //     .then( response => {
-                    //         console.log(response.data);
-                            
-                    //         props.tableRefresh();
-                    //         handleClose();
-                    //     });
                 }
             
-           }
+        //    }
     }
 
     const handleClose = () =>{
@@ -177,7 +153,8 @@ function UpdateWorker(props ) {
                         Update Worker
                     </Typography>
 
-                        <Container sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
+                        <Container 
+                            sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
                             style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',
                                 width: '100px',height: '110px',}}
                         >
