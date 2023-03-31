@@ -103,30 +103,43 @@ function UpdateWorker(props ) {
                     formData.append("Name", editingWorker.name);
                     formData.append("Age", editingWorker.age);
                     formData.append("Email", editingWorker.email);
-                    formData.append("CertifiedDate", editingWorker.certifiedDate);
+                    formData.append("CertifiedDate", new Date(editingWorker.certifiedDate).toISOString());
                     formData.append("DesignationId", editingWorker.designationId);
-                    formData.append("WorkerPhoto", editingWorker.workerPhoto);
+                    formData.append("ImageFile", editingWorker.workerPhoto);
         
-                    //console.log(editingWorker);
+                    // //console.log(editingWorker);
+
+                    // const form = e.target;
+                    // const updateWorker = new FormData();
+                    // updateWorker.append("Name", form.name.value);
+                    // updateWorker.append("Age", form.age.value);
+                    // updateWorker.append("Email", form.email.value);
+                    // updateWorker.append("CertifiedDate", form.certifiedDate.value);
+                    // updateWorker.append("DesignationId", form.designationId.value);
+                    // updateWorker.append("ImageFile", form.imageFile.files[0]);
 
                     try {
+                        const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, 
+                            {
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            })
+                            .then(response => {
+                                console.log(response.data);
+            
+                                props.tableRefresh();
+                                props.setOpenUpdateModal(false);
+                            });
 
-                        const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, {
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-                            }
-                        })
-                        .then(response => {
-                            console.log(response.data);
-        
-                            props.tableRefresh();
-                            handleClose();
-                        });
-        
-                        //console.log("Update successful:", response.data);
-        
+                        if (response.status === 200) {
+                        alert("Worker updated successfully!");
+                        } else {
+                        alert("Error updating worker.");
+                        }
                     } catch (error) {
-                        console.error("Update failed:", error);  
+                        alert("Error updating worker.");
+                        console.log(error);
                     }
 
                     // axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
@@ -163,7 +176,6 @@ function UpdateWorker(props ) {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Update Worker
                     </Typography>
-                    <form onSubmit={()=>updateWorkerSubmit(editingWorker)} >
 
                         <Container sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
                             style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',
@@ -184,7 +196,15 @@ function UpdateWorker(props ) {
                                 type="file"
                                 hidden
                                 accept='image/*'
-                                onChange={ showPreview}
+                                onChange={ (e) => 
+                                
+                                    (e.target.files && e.target.files[0])?
+                                        setWorker({
+                                        ...editingWorker,
+                                        workerPhoto: (e.target.files[0]),
+                                    }):
+                                    null
+                                }
                             />
                         </Button>
                         
@@ -243,7 +263,8 @@ function UpdateWorker(props ) {
                                     type="date"
                                     defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
                                     
-                                    onChange= {(e) => setWorker({...editingWorker, certifiedDate:new Date(e.target.value).toISOString().slice(0,10) })}
+                                    //onChange= {(e) => setWorker({...editingWorker, certifiedDate:new Date(e.target.value).toISOString().slice(0,10) })}
+                                    onChange= {(e) => setWorker({...editingWorker, certifiedDate: e.target.value})}
                                     helperText={certifiedDateError}
                                     InputLabelProps={{
                                         shrink: true,
@@ -278,8 +299,7 @@ function UpdateWorker(props ) {
                     
                         <Button 
                             variant="contained" 
-                            type='submit'
-                            //onClick={() => updateWorkerSubmit(editingWorker)} 
+                            onClick={() => updateWorkerSubmit(editingWorker)} 
                             sx={{margin: 3, minWidth:100}}
                         >
                             Submit
@@ -289,7 +309,6 @@ function UpdateWorker(props ) {
                             variant="contained" 
                             onClick={handleClose} 
                             sx={{marginLeft: 4}}>Close</Button>
-                    </form>    
                 </Box>
             </Modal>
         </div>
