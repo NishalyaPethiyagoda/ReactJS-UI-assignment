@@ -83,10 +83,10 @@ function EditFarm( props ) {
 
             try {
                 const response = await axios.put(`http://localhost:12759/api/Farm/${farm.id}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-                })
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                    })
                 .then(response => {
                     console.log(response.data);
 
@@ -139,26 +139,26 @@ function EditFarm( props ) {
                             </img>
                     </Container>
                     <Button
-                            variant="contained"
-                            component="label"
-                            sx={{width: '100%', height: 25, }}
-                            >
-                            Upload Image
-                            <input
-                                type="file"
-                                hidden
-                                accept='image/*'
-                                onChange={(e) => 
-                                    
-                                        (e.target.files && e.target.files[0])?
-                                            setSelectedFarm({
-                                            ...farm,
-                                            imageFile: (e.target.files[0]),
-                                        }):
-                                        null
-                                    
-                                }
-                            />
+                        variant="contained"
+                        component="label"
+                        sx={{width: '100%', height: 25, }}
+                        >
+                        Upload Image
+                        <input
+                            type="file"
+                            hidden
+                            accept='image/*'
+                            onChange={(e) => 
+                                
+                                    (e.target.files && e.target.files[0])?
+                                        setSelectedFarm({
+                                        ...farm,
+                                        imageFile: (e.target.files[0]),
+                                    }):
+                                    null
+                                
+                            }
+                        />
                     </Button>
 
                     <TextField
