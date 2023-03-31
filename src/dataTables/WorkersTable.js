@@ -11,7 +11,7 @@ import axios from 'axios';
 import {useState} from 'react'
 import UpdateWorker from '../components/workers/UpdateWorker';
 import ConfirmationPopup from '../components/ConfirmationPopup';
-
+import { Box } from '@mui/system';
 
 export default function WorkersTable(props) {
 
@@ -42,7 +42,6 @@ export default function WorkersTable(props) {
 
     axios.delete(`http://localhost:12759/api/worker/${worker.id}`)
        .then(response=> {
-          // setDeletedAlert(response.data);
           console.log(response.data);
           props.tableRefresh();
         });
@@ -69,7 +68,7 @@ export default function WorkersTable(props) {
         <Table  aria-label="simple table">
           <TableHead>
             <TableRow>
-            {/* <TableCell align="left">Worker ID</TableCell> */}
+            <TableCell align="left">Worker's Picture</TableCell>
             <TableCell align="left" sx={{paddingLeft: 3}}> Name</TableCell>
             <TableCell align="left">Age</TableCell>
             <TableCell align="left">Email</TableCell>
@@ -85,9 +84,11 @@ export default function WorkersTable(props) {
               
                 return(
                   <TableRow hover role = "checkbox" key={worker.name}>
-                    {/* <TableCell align='left'>
-                      {worker.Id}  
-                    </TableCell> */}
+                    <TableCell align='left'>
+                      <Box sx={{height: '90px', width: '100px'}}>
+                        <img src={worker.workerPhotoSrc} style={{width: '100%' , height: '100%'}}></img>
+                      </Box> 
+                    </TableCell>
                     <TableCell align='left' component="th" scope="row" sx={{paddingLeft: 3}}>
                       {worker.name}  
                     </TableCell>

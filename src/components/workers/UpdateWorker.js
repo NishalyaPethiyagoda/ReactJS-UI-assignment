@@ -8,6 +8,7 @@ import {  MenuItem, TextField } from '@mui/material';
 import axios from 'axios';
 import { Grid } from '@mui/material';
 import {z} from "zod";
+import { Container } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -15,14 +16,14 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '20%',
+    height: '90%',
     minWidth: '300px',
-    
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
-
+  
 
 function UpdateWorker(props ) {
     
@@ -34,6 +35,9 @@ function UpdateWorker(props ) {
         email: props.worker.email,
         certifiedDate: new Date(props.worker.certifiedDate),
         designationId: parseInt(props.worker.designationId),
+        workerPhotoName: null,
+        workerPhoto: null,
+        workerPhotoSrc: props.worker.workerPhotoSrc,
     });
   
     useEffect(()=>{
@@ -55,28 +59,86 @@ function UpdateWorker(props ) {
     const [emailError, setEmailError] = useState('');
     const [certifiedDateError, setCertifiedDateError] = useState('');
     const [designationIdError, setDesignationIdError] = useState('');
+    const [workerPhotoError , setWorkerPhotoError] =useState('');
 
 
-    const updateWorkerSubmit = (editingWorker) => {
+    const showPreview = (event) => {
+
+        if(event.target.files && event.target.files[0] )
+        {
+            let imageFile1 = event.target.files[0];
+            setWorker({
+                ...editingWorker,
+                workerPhoto: imageFile1,
+                workerPhotoSrc: imageFile1.src,
+            })
+        }
+        else
+        {
+            // setWorker({
+            //     ...editingWorker,
+            //     workerPhotoSrc: editingWorker.workerPhotoSrc,
+            // })
+        }
+    }
+
+    const updateWorkerSubmit = async (editingWorker) => {
 
         const updateResult = validationScheme.safeParse(editingWorker);
 
-        if(!updateResult.success){
-            updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
-            updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
-            updateResult.error.format().email? setEmailError(updateResult.error.format().email._errors[0]) : setEmailError('');
-            updateResult.error.format().designationId? setDesignationIdError(updateResult.error.format().designationId._errors[0] ): setDesignationIdError('');
+        if(editingWorker.workerPhoto==null){
+            setWorkerPhotoError('error');
         }
         else{
-            axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
-                .then( response => {
-                    console.log(response.data);
-                    
-                    props.tableRefresh();
-                    handleClose();
-                });
+                if(!updateResult.success){
+                    updateResult.error.format().name? setNameError(updateResult.error.format().name._errors[0]) : setNameError('');
+                    updateResult.error.format().age? setAgeError(updateResult.error.format().age._errors[0] ): setAgeError('');
+                    updateResult.error.format().email? setEmailError(updateResult.error.format().email._errors[0]) : setEmailError('');
+                    updateResult.error.format().designationId? setDesignationIdError(updateResult.error.format().designationId._errors[0] ): setDesignationIdError('');
+                }
+                else{
+
+                    const formData = new FormData();
+
+                    formData.append("Name", editingWorker.name);
+                    formData.append("Age", editingWorker.age);
+                    formData.append("Email", editingWorker.email);
+                    formData.append("CertifiedDate", editingWorker.certifiedDate);
+                    formData.append("DesignationId", editingWorker.designationId);
+                    formData.append("WorkerPhoto", editingWorker.workerPhoto);
+        
+                    //console.log(editingWorker);
+
+                    try {
+
+                        const response = await axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, formData, {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
+                        .then(response => {
+                            console.log(response.data);
+        
+                            props.tableRefresh();
+                            handleClose();
+                        });
+        
+                        //console.log("Update successful:", response.data);
+        
+                    } catch (error) {
+                        console.error("Update failed:", error);  
+                    }
+
+                    // axios.put(`http://localhost:12759/api/Worker/${editingWorker.id}`, editingWorker)
+                    //     .then( response => {
+                    //         console.log(response.data);
+                            
+                    //         props.tableRefresh();
+                    //         handleClose();
+                    //     });
+                }
             
-        }
+           }
     }
 
     const handleClose = () =>{
@@ -85,8 +147,6 @@ function UpdateWorker(props ) {
         setEmailError('');
         setCertifiedDateError('');
         setDesignationIdError('');
-
-        setWorker(null);
 
         props.setOpenUpdateModal(false);
     }
@@ -103,106 +163,133 @@ function UpdateWorker(props ) {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Update Worker
                     </Typography>
-                        
-                    <TextField 
-                        error = { nameError!== ''? true: false}
-                        id="outlined-basic" 
-                        required={true}
-                        label="Name" 
-                        type="text"
-                        sx={{minWidth: 295, marginTop:3}} 
-                        variant="outlined"  
-                        defaultValue={editingWorker.name} 
-                        onChange={(e) => {
-                            setWorker({...editingWorker, name: e.target.value});
-                        }}
-                        autocomplete="off"
-                        helperText={nameError}
-                    />
-                    <TextField 
-                        error = {ageError!== ''? true: false}
-                        id="outlined-basic" 
-                        rewuired={true}
-                        label="Age" 
-                        type="number"
-                        sx={{minWidth: 295, marginTop:3}} 
-                        variant="outlined"  
-                        defaultValue={editingWorker.age} 
-                        onChange={(e) => setWorker({...editingWorker, age: parseFloat(e.target.value)})}
-                        inputProps={{step: '1', min: 18, max: 60 }}
-                        autocomplete="off"
-                        helperText={ageError}
-                    />
-                   <TextField 
-                        error= {emailError!==''? true : false}
-                        id="outlined-basic" 
-                        required={true}
-                        label="Email" 
-                        type="email"
-                        sx={{minWidth: 295 , marginTop:3}} 
-                        variant="outlined" 
-                        defaultValue={editingWorker.email}
-                        onChange={(e) => setWorker({...editingWorker, email: e.target.value})}
-                        autocomplete="off"
-                        helperText={emailError}
-                    ></TextField>
+                    <form onSubmit={()=>updateWorkerSubmit(editingWorker)} >
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <TextField
-                                error = {certifiedDateError!== ''? true: false}
-                                id="outlined-basic"
-                                required ={true}
-                                label="Worker Certified Until (Date)"
-                                sx={{minWidth: 295, marginTop:3}}
-                                variant="outlined"
-                                type="date"
-                                defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
-                                onChange= {(e) => setWorker({...editingWorker, certifiedDate: e.target.value})}
-                                helperText={certifiedDateError}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
+                        <Container sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
+                            style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',
+                                width: '100px',height: '110px',}}
+                        >
+                            <img src={editingWorker.workerPhotoSrc } 
+                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '130px',height: '130px'}}
+                            ></img>
+                        </Container>
+
+                        <Button
+                            variant="contained"
+                            component="label"
+                            sx={{width: '100%', height: 25, backgroundColor: workerPhotoError==='error' ? 'red' : 'blue'  }}
+                        >
+                            Upload Worker Photo
+                            <input
+                                type="file"
+                                hidden
+                                accept='image/*'
+                                onChange={ showPreview}
                             />
-                        </Grid>
-                    </Grid>
-                    
-                    <TextField 
-                        select 
-                        error = {designationIdError!==''? true: false}
-                        id="outlined-select" 
-                        label="Designation" 
-                        required={true}
-                        variant="filled"
-                        defaultValue={parseInt(editingWorker.designationId)}
-                        onChange={(e) => setWorker({...editingWorker, designationId: parseInt(e.target.value)})}
-                        autocomplete="off"
-                        helperText={designationIdError}
-                        sx={{minWidth: 295, marginTop:3}}
-                    >
-                        {positions.map( (designation) => (
-                            <MenuItem 
-                                key={designation.id} 
-                                value={designation.id}
-                            >
-                                { designation.name}
-                            </MenuItem>
-                            )) 
-                        }
-                    </TextField>
-                
-                    <Button 
-                        variant="contained" 
-                        onClick={() => updateWorkerSubmit(editingWorker)} 
-                        sx={{margin: 3, minWidth:100}}
-                    >
-                        Submit
-                    </Button>
+                        </Button>
                         
-                    <Button 
-                        variant="contained" 
-                        onClick={handleClose} 
-                        sx={{marginLeft: 4}}>Close</Button>
+                        <TextField 
+                            error = { nameError!== ''? true: false}
+                            id="outlined-basic" 
+                            required={true}
+                            label="Name" 
+                            type="text"
+                            sx={{minWidth: 295, marginTop:3}} 
+                            variant="outlined"  
+                            defaultValue={editingWorker.name} 
+                            onChange={(e) => {
+                                setWorker({...editingWorker, name: e.target.value});
+                            }}
+                            autocomplete="off"
+                            helperText={nameError}
+                        />
+                        <TextField 
+                            error = {ageError!== ''? true: false}
+                            id="outlined-basic" 
+                            rewuired={true}
+                            label="Age" 
+                            type="number"
+                            sx={{minWidth: 295, marginTop:3}} 
+                            variant="outlined"  
+                            defaultValue={editingWorker.age} 
+                            onChange={(e) => setWorker({...editingWorker, age: parseFloat(e.target.value)})}
+                            inputProps={{step: '1', min: 18, max: 60 }}
+                            autocomplete="off"
+                            helperText={ageError}
+                        />
+                    <TextField 
+                            error= {emailError!==''? true : false}
+                            id="outlined-basic" 
+                            required={true}
+                            label="Email" 
+                            type="email"
+                            sx={{minWidth: 295 , marginTop:3}} 
+                            variant="outlined" 
+                            defaultValue={editingWorker.email}
+                            onChange={(e) => setWorker({...editingWorker, email: e.target.value})}
+                            autocomplete="off"
+                            helperText={emailError}
+                        ></TextField>
+
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    error = {certifiedDateError!== ''? true: false}
+                                    id="outlined-basic"
+                                    required ={true}
+                                    label="Worker Certified Until (Date)"
+                                    sx={{minWidth: 295, marginTop:3}}
+                                    variant="outlined"
+                                    type="date"
+                                    defaultValue={ new Date(editingWorker.certifiedDate).toISOString().slice(0,10)}
+                                    
+                                    onChange= {(e) => setWorker({...editingWorker, certifiedDate:new Date(e.target.value).toISOString().slice(0,10) })}
+                                    helperText={certifiedDateError}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </Grid>
+                        </Grid>
+                        
+                        <TextField 
+                            select 
+                            error = {designationIdError!==''? true: false}
+                            id="outlined-select" 
+                            label="Designation" 
+                            required={true}
+                            variant="filled"
+                            defaultValue={parseInt(editingWorker.designationId)}
+                            onChange={(e) => setWorker({...editingWorker, designationId: parseInt(e.target.value)})}
+                            autocomplete="off"
+                            helperText={designationIdError}
+                            sx={{minWidth: 295, marginTop:3}}
+                        >
+                            {positions.map( (designation) => (
+                                <MenuItem 
+                                    key={designation.id} 
+                                    value={designation.id}
+                                >
+                                    { designation.name}
+                                </MenuItem>
+                                )) 
+                            }
+                        </TextField>
+                    
+                        <Button 
+                            variant="contained" 
+                            type='submit'
+                            //onClick={() => updateWorkerSubmit(editingWorker)} 
+                            sx={{margin: 3, minWidth:100}}
+                        >
+                            Submit
+                        </Button>
+                            
+                        <Button 
+                            variant="contained" 
+                            onClick={handleClose} 
+                            sx={{marginLeft: 4}}>Close</Button>
+                    </form>    
                 </Box>
             </Modal>
         </div>
