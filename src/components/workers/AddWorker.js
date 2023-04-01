@@ -10,6 +10,7 @@ import axios from 'axios';
 import { Grid } from '@mui/material';
 import {z} from "zod";
 import { Container } from '@mui/system';
+import Avatar from '@mui/material/Avatar';
 
 
 const style = {
@@ -54,6 +55,18 @@ function AddWorker(props) {
         setDesignationIdError('');
         setWorkerPhotoError(null);
 
+        setWorker({
+            name: null,
+            age: null,
+            email: null,
+            certifiedDate: null,
+            designationsId: null,
+            workerPhoto: null,
+            workerPhotoSrc: null,
+            workerPhotoName: null,
+
+        });
+
         setOpen(false);
 
     }
@@ -78,26 +91,6 @@ function AddWorker(props) {
     const [designationIdError, setDesignationIdError] = useState('');
     const [workerPhotoError, setWorkerPhotoError] = useState('');
     
-    const showPreview = (event) => {
-
-        if(event.target.files && event.target.files[0] )
-        {
-            let imageFile1 = event.target.files[0];
-            setWorker({
-                ...newWorker,
-                workerPhoto: imageFile1,
-                workerPhotoSrc: imageFile1.src,
-            })
-        }
-        else
-        {
-            setWorker({
-                ...newWorker,
-                workerPhoto: null,
-                workerPhotoSrc: null,
-            })
-        }
-    }
 
     const handleFormSubmit = (e)=>{
 
@@ -163,6 +156,7 @@ function AddWorker(props) {
                             designationsId: null,
                             workerPhoto: null,
                             workerPhotoSrc: null,
+                            workerPhotoName: null,
 
                         });
 
@@ -194,17 +188,14 @@ function AddWorker(props) {
                     </Typography>
 
                     <form onSubmit={handleFormSubmit}>
-                        <Container sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
-                            style = {{display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: '110px',
-                                height: '110px',}}
-                        >
-                            <img src={newWorker.workerPhotoSrc===null? defaultFarmImageSrc: newWorker.workerPhotoSrc } 
-                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '110px',height: '110px'}}
-                            ></img>
+                        <Container Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Avatar 
+                                style ={{justifyContent: 'center', width: '100px', height: '110px'}}
+                                src={newWorker.workerPhotoSrc}
+                                sx={{ marginTop: 1, marginBottom: 1, width: 60, height: 60 }}
+                            />
                         </Container>
+
                         <Button
                             variant="contained"
                             component="label"
@@ -215,7 +206,20 @@ function AddWorker(props) {
                                 type="file"
                                 hidden
                                 accept='image/*'
-                                onChange={ showPreview}
+                                onChange={(e) => {
+                                    const reader = new FileReader();
+                                    const file = e.target.files[0];
+
+                                    reader.onload =(event) => {
+                                        setWorker({
+                                            ...newWorker,
+                                            workerPhoto: file,
+                                            workerPhotoSrc: event.target.result,
+                                        })
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+}
                             />
                         </Button>
 

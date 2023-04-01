@@ -9,6 +9,7 @@ import axios from 'axios';
 import { Grid } from '@mui/material';
 import {z} from "zod";
 import { Container } from '@mui/system';
+import Avatar from '@mui/material/Avatar';
 
 const style = {
     position: 'absolute',
@@ -89,8 +90,6 @@ function UpdateWorker(props ) {
                         }
                     })
                     .then(response => {
-                        console.log(response.data);
-    
                         props.tableRefresh();
                         props.setOpenUpdateModal(false);
                     });
@@ -124,15 +123,13 @@ function UpdateWorker(props ) {
                         Update Worker
                     </Typography>
 
-                        <Container sx={{backgroundColor: 'grey' , marginTop: 1, marginBottom: 1 , }} 
-                            style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',
-                                width: '100px',height: '110px',}}
-                        >
-                            <img src={editingWorker.workerPhotoSrc } 
-                                style = {{display: 'flex',justifyContent: 'center',alignItems: 'center',width: '100px',height: '110px',}}
-                            ></img>
-                        </Container>
-
+                    <Container Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Avatar 
+                            style ={{justifyContent: 'center', width: '100px', height: '110px'}}
+                            src={editingWorker.workerPhotoSrc}
+                            sx={{ marginTop: 1, marginBottom: 1, width: 60, height: 60 }}
+                        />
+                    </Container>
                         <Button
                             variant="contained"
                             component="label"
@@ -143,14 +140,20 @@ function UpdateWorker(props ) {
                                 type="file"
                                 hidden
                                 accept='image/*'
-                                onChange={ (e) => 
-                                        
-                                    (e.target.files && e.target.files[0])?
+                                onChange={ (e) => {
+
+                                    const reader = new FileReader();
+                                    const file = e.target.files[0];
+
+                                    reader.onload =(event) => {
                                         setWorker({
-                                        ...editingWorker,
-                                        workerPhoto: (e.target.files[0]),
-                                    }):
-                                    null
+                                            ...editingWorker,
+                                            workerPhoto: file,
+                                            workerPhotoSrc: event.target.result,
+                                        })
+                                    };
+                                    reader.readAsDataURL(file);
+                                    }
                                 }
                             />
                         </Button>

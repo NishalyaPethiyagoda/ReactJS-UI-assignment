@@ -33,13 +33,14 @@ const style = {
 function EditFarm( props ) {
 
     const [farm, setSelectedFarm] = useState({
+        id: props.selectedFarm.id,
         name: props.selectedFarm.name,
         latitude: props.selectedFarm.latitude,
         longitude: props.selectedFarm.longitude,
         noOfCages: props.selectedFarm.noOfCages,
         hasBarge: props.selectedFarm.hasBarge,
         imageName: props.selectedFarm.imageName,
-        //imageFile: props.farm.imageFile,
+        imageFile: props.selectedFarm.imageFile,
     });
 
     const validationSchema = z.object({
@@ -150,13 +151,20 @@ function EditFarm( props ) {
                             accept='image/*'
                             onChange={(e) => 
                                 
-                                    (e.target.files && e.target.files[0])?
-                                        setSelectedFarm({
-                                        ...farm,
-                                        imageFile: (e.target.files[0]),
-                                    }):
-                                    null
-                                
+                                    {
+                                        const reader = new FileReader;
+                                        const file = e.target.files[0];
+
+                                        reader.onload = (event) =>{
+                                            setSelectedFarm({
+                                                ...farm,
+                                                imageFile: file,
+                                                imageName: event.target.result,
+                                            })
+                                        };
+
+                                        reader.readAsDataURL(file);
+                                    }
                             }
                         />
                     </Button>

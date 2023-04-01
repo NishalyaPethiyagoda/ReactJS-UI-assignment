@@ -47,7 +47,6 @@ function AddFarm(props) {
     ];
 
     const [newFarm , setNewFarm] = useState({
-
         imageName:null,
         imageSrc: null,
         imageFile: null,
@@ -84,7 +83,7 @@ function AddFarm(props) {
         setNewFarm({
             ...newFarm, 
             imageFile: null,
-            imageSrc: defaultFarmImageSrc,
+            imageName: defaultFarmImageSrc,
         });
         setAddFarmModal(true);
     };
@@ -151,20 +150,13 @@ function AddFarm(props) {
     {
         if(event.target.files && event.target.files[0])
         {
-            let imageFile1 = event.target.files[0];
+            
 
-            setNewFarm({
-                ...newFarm, 
-                imageFile: imageFile1,
-                imageSrc: imageFile1.src,
-            })
-        }
-        else{
-            setNewFarm({
-                ...newFarm, 
-                imageFile: null,
-                imageSrc: defaultFarmImageSrc,
-            })
+            // setNewFarm({
+            //     ...newFarm, 
+            //     imageFile: file,
+            //     imageSrc: imageFile1.src,
+            // })
         }
     }
 
@@ -193,7 +185,8 @@ function AddFarm(props) {
                             style={imgContainerStyle}
                         >
                             <img 
-                                src={newFarm.imageSrc===null? defaultFarmImageSrc: newFarm.imageSrc } 
+                                src={newFarm.imageName}
+                                    // ===null? defaultFarmImageSrc: newFarm.imageName } 
                                 alt="Default Farm Image" 
                                 style={imgContainerStyle}>
                             </img>
@@ -209,7 +202,22 @@ function AddFarm(props) {
                                 type="file"
                                 hidden
                                 accept='image/*'
-                                onChange={ showPreview}
+                                onChange={(event) => {
+                                    const reader = new FileReader;
+                                    const file  = event.target.files[0];
+
+                                    reader.onload = (e) => {
+                                        setNewFarm({
+                                            ...newFarm,
+                                            imageFile: file,
+                                            imageName: e.target.result,
+                                        })
+
+                                        setImageError('');
+                                    };
+
+                                    reader.readAsDataURL(file);
+                                }}
                             />
                         </Button>
                         <TextField
