@@ -149,6 +149,7 @@ function EditFarm( props ) {
                             type="file"
                             hidden
                             accept='image/*'
+                            //defaultValue= { farm.imageName}
                             onChange={(e) => 
                                 
                                     {
@@ -164,6 +165,8 @@ function EditFarm( props ) {
                                         };
 
                                         reader.readAsDataURL(file);
+
+                                        setHasImageError('');
                                     }
                             }
                         />

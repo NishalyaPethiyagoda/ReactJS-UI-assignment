@@ -12,7 +12,7 @@ import { backdropClasses, Button, Modal } from '@mui/material';
 import axios from 'axios';
 import {useState} from 'react';
 import ConfirmationPopup from '../components/ConfirmationPopup';
-import EditFarm from '../components/farmers/EditFarm';
+import EditFarm from '../components/farms/EditFarm';
 import AssignedWorkers from '../components/assignedWorkers/AssignedWorkers';
 import  Box  from '@mui/material/Box';
 

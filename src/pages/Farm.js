@@ -3,7 +3,7 @@ import React from 'react'
 import FarmersTable from '../dataTables/FarmersTable'
 import { Container } from '@mui/system';
 import Box from '@mui/material/Box';
-import AddFarm from '../components/farmers/AddFarm';
+import AddFarm from '../components/farms/AddFarm';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -15,8 +15,6 @@ function Farms() {
         {id: 1, label: "Yes", value: true},
         {id: 2, label: "No" , value: false},
     ];
-
-    //console.log(farmList);
     
     const [farmList, getFarmList] = useState([]);
     const [ tablerRefreshKey , setTableRefresh] = useState(0);
@@ -56,4 +54,3 @@ function Farms() {
 }
 
 export default Farms
-{/* backgroundColor: 'blue' */}
